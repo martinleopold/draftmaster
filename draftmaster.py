@@ -745,8 +745,22 @@ def WD(cc=None, terminator='\x03'):
 # Part III – Special Applications
 # Chapter 11: Digitizing
 
+def DC():
+    # See page 11-6
+    '''DC, Digitize Clear
+    USE: Terminates digitze mode. For example, if you are using an interrupt routine in a digitizing program to branch to another plotting function, use DC to clear the digitize mode immediately after branching.
+    '''
+    return _cmd('DC;')
+
+def DP():
+    # See page 11-7
+    '''DP, Digitize Point
+    USE: Returns the X,Y coordinates of a selected point on a plot to the computer for later use. Use this instruction to input data for a graphics program or to obtain the coordinates of a point or points on a plot.
+    '''
+    return _cmd('DP;')
+
 def OD():
-    # page 11-8
+    # See page 11-8
     '''OD, Output Digitized Point and Pen Status
     Outputs the X,Y coordinates and up/down pen position associated with the last digitized point. Use this instruction  after the DP instruction to return the coordinates of the digitized point to your computer.
     '''
