@@ -839,8 +839,12 @@ def ESC_S(n):
 
 # Make all those uppercase commands available as lowercase as well
 def _add_lowercase():
+    from keyword import kwlist
     g = globals()
-    cmds = list( filter(lambda g: len(g) == 2 and g.isupper(), globals()) )
+    cmds = list( filter(lambda g: len(g) == 2 and g.isupper(), g) )
     for cmd in cmds:
-        g[cmd.lower()] = g[cmd]
+        cmd_new = cmd.lower()
+        g[cmd_new] = g[cmd]
+        # add trailing _ if the new command name is a reserved word (e.g. in, if, is, or)
+        if cmd_new in kwlist: g[cmd_new + '_'] = g[cmd]
 _add_lowercase()
