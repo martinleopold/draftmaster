@@ -14,6 +14,20 @@
 def _cmd(str):
     return str
 
+def _check_args(forms, args):
+    '''Check if args correspond to at least one of the allowed forms. If not, a value error is raised.
+    Returns an enumeration of arg names and values of the first valid form that was found.
+    '''
+    arg_names = [ arg_name for arg_name in args if args[arg_name] != None] # List of argument names that were provided
+    for required_args in forms:
+        if set(arg_names) == set(required_args):
+            return [ (arg_name, args[arg_name]) for arg_name in arg_names ] # Return enumeration of arg name and arg value
+    raise ValueError(f'Argument error. Args given: {arg_names}. Allowed forms: {", ".join(map(str, forms))}')
+
+def _join_args(args, sep=','):
+    '''Takes an enumeration of arg names and values and returns a string of joined arg values'''
+    return sep.join( [str(arg_value) for _, arg_value in args] )
+
 # See page TODO
 _hpgl_error_numbers = ['No error', 'Instruction not recognized', 'Wrong number of parameters', 'Out-of range parameter, or illegal character', 'Not used', 'Unknown character set', 'Position overflow (not reported with default E-mask value)', 'Buffer overflow for polygons']
 
@@ -27,6 +41,9 @@ def DF():
     '''DF, Default
     USE: Set certain graphics functions to their predefined default settings. Use this instruction to return the plotter to a known state while maintaining the current locations of P1 and P2. When you use DF at the beginning of a program, unwanted graphics parameters such as character size, slant, or scaling are not inherited from another program.
     '''
+    _check_args([
+        []
+    ], locals())
     return _cmd('DF;')
 
 def IN(partial=False):
@@ -34,6 +51,10 @@ def IN(partial=False):
     '''IN, Initialize
     USE: Resets most plotter functions to their default settings. Use this instruction to return the plotter to a known state and to cancel settings that may have been changed by a previous program.
     '''
+    _check_args([
+        [],
+        ['partial']
+    ], locals())
     if partial:
         return _cmd('IN-1;')
     else:
@@ -44,26 +65,27 @@ def IP(p1x=None, p1y=None, p2x=None, p2y=None):
     '''IP, Input P1 and P2
     USE: Allows you to establish new or default locations for the scaling points P1 and P2. P1 and P2 are used by the scaling instruction (SC) to establish user-unit scaling. The IP instruction is often used to ensure that a plot is always the same size, regardless of where P1 and P2 might have been set from the front panel or the size of media loaded in the plotter. This instruction can also be used in advanced techniques such as plotting mirror images, enlarging/reducing plots, and enlarging/reducing relative character size or direction (refer to Chapters 7 and 9).
     '''
-    if p1x == None:
-        return _cmd('IP;')
-    elif p2x == None:
-        return _cmd(f'IP{p1x},{p1y};')
-    else:
-        return _cmd(f'IP{p1x},{p1y},{p2x},{p2y};')
+    args = _check_args([
+        [],
+        ['p1x', 'p1y'],
+        ['p1x', 'p1y', 'p2x', 'p2y']
+    ], locals())
+    args = _join_args(args)
+    return _cmd(f'IP{args};')
 
 def SC(xmin=None, xmax_xfactor=None, ymin=None, ymax_yfactor=None, type=None, left=None, bottom=None):
     # See page 3-21
     '''SC, Scale
     USE: Establishes a user-unit coordinate system by mapping user-defined coordinate values onto the scaling points P1 and P2. Thus, you can plot in units convenient to your application. In addition, you can use this instruction to establish automatic isotropic scaling or to relocate the origin and set a specific ratio of plotter units to user units. For a discussion of the basic concept of scaling, refer to Scaling in Chapter 2.
     '''
-    if xmin == None:
-        return _cmd('SC;')
-    elif type == None:
-        return _cmd(f'SC{xmin},{xmax_xfactor},{ymin},{ymax_yfactor};')
-    elif left == None:
-        return _cmd(f'SC{xmin},{xmax_xfactor},{ymin},{ymax_yfactor},{type};')
-    else:
-        return _cmd(f'SC{xmin},{xmax_xfactor},{ymin},{ymax_yfactor},{type},{left},{bottom};')
+    args = _check_args([
+        [],
+        ['xmin', 'xmax_xfactor', 'ymin', 'ymax_yfactor'],
+        ['xmin', 'xmax_xfactor', 'ymin', 'ymax_yfactor', 'type'],
+        ['xmin', 'xmax_xfactor', 'ymin', 'ymax_yfactor', 'type', 'left', 'bottom']
+    ], locals())
+    args = _join_args(args)
+    return _cmd(f'SC{args};')
 
 # Chapter 4: Drawing Lines and Rectangles
 
@@ -72,6 +94,9 @@ def EA(x, y):
     '''EA, Edge Rectangle Absolute
     USE: Defines and outline a rectangle using absolute coordinates. Use the EA instruction to create charts that require rectangles; for example, bar charts, flow charts, and organization charts.
     '''
+    _check_args([
+        ['x', 'y']
+    ], locals())
     return _cmd(f'EA{x},{y};')
 
 def ER(x, y):
@@ -79,57 +104,54 @@ def ER(x, y):
     '''ER, Edge Rectangle Relative
     USE: Defines and outlines a rectangle using relative coordinates. Use ER to create charts that require rectangles; for example, bar charts, flow charts, and organization charts.
     '''
+    _check_args([
+        ['x', 'y']
+    ], locals())
     return _cmd(f'ER{x},{y};')
 
-def PA(x=None, y=None):
+def PA(*x_y):
     # See page 4-11
     '''PA, Plot Absolute
     USE: Establishes absolute plotting and moves the pen to the specified absolute coordinates using the current pen position.
     '''
-    if x == None:
-        return _cmd('PA;')
-    else:
-        return _cmd(f'PA{x},{y};')
+    coord_list = ",".join( map(str, x_y) )
+    return _cmd(f'PA{coord_list};')
 
-def PD(x=None, y=None):
+def PD(*x_y):
     # See page 4-12
     '''PD, Pen Down
     USE: Lowers the pen onto the writing surface for drawing.
     '''
-    if x == None:
-        return _cmd('PD;')
-    else:
-        return _cmd(f'PD{x},{y};')
+    coord_list = ",".join( map(str, x_y) )
+    return _cmd(f'PD{coord_list};')
 
-def PR(x=None, y=None):
+def PR(*x_y):
     # See page 4-14
     '''PR, Plot Relative
     USE: Establishes relative plotting and moves the pen to specified points, each sucessive move relative to the current pen location.
     '''
-    if x == None:
-        return _cmd('PR;')
-    else:
-        return _cmd(f'PR{x},{y};')
+    coord_list = ",".join( map(str, x_y) )
+    return _cmd(f'PR{coord_list};')
 
-def PU(x=None, y=None):
+def PU(*x_y):
     # See page 4-16
     '''PU, Pen Up
     USE: Raises the pen from the plotting surface. Use this instruction to move the pen to the beginning of the next line.
     '''
-    if x == None:
-        return _cmd('PU;')
-    else:
-        return _cmd(f'PU{x},{y};')
+    coord_list = ",".join( map(str, x_y) )
+    return _cmd(f'PU{coord_list};')
 
 def SP(pen_number=None):
     # See page 4-17
     '''SP, Select Pen
     USE: Loads specified pen into the pen holder or returns the current pen to the carousel. Use the SP instruction to change pen colors or widths during a plot. At the end of every program, use SP to return the pen to the carousel.
     '''
-    if pen_number == None:
-        return _cmd('SP;')
-    else:
-        return _cmd(f'SP{pen_number};')
+    args = _check_args([
+        [],
+        ['pen_number']
+    ], locals())
+    args = _join_args(args)
+    return _cmd(f'SP{args};')
 
 # Part II – Advanced Plotting
 # Chapter 5: Enhancing Your Plots
@@ -139,22 +161,27 @@ def FT(type=None, spacing=None, angle=None):
     '''FT, Fill Type
     USE: Selects the shading pattern used to fill polygons (FP), rectangles (RA or RR), or wedges (WG). Use this instruction to enhance plots with solid fill, parallel lines (hatching), cross-hatching, or a fill pattern you designed using the user-defined fill type (UF) instruction.
     '''
-    if type == None:
-        return _cmd('FT;')
-    elif spacing == None:
-        return _cmd(f'FT{type};')
-    elif angle == None:
-        return _cmd(f'FT{type},{spacing};')
-    else:
-        return _cmd(f'FT{type},{spacing},{angle};')
+    args = _check_args([
+        [],
+        ['type'],
+        ['type', 'spacing'],
+        ['type', 'spacing', 'angle'],
+    ], locals())
+    args = _join_args(args)
+    return _cmd(f'FT{args};')
 
-def LT():
+def LT(pattern_number=None, pattern_length=None):
     # See page 5-9
     '''LT, Line Type
-    USE: 
-    TODO
+    USE: Specifies the line pattern to be used when drawing lnies and nonsolid fill types. Use LT to emphasize or de-emphasize plotted lines and shapes.
     '''
-    return _cmd('XY;')
+    args = _check_args([
+        [],
+        ['pattern_number'],
+        ['pattern_number', 'pattern_length']
+    ], locals())
+    args = _join_args(args)
+    return _cmd(f'LT{args};')
 
 # Chapter 6: Drawing Circles, Arcs, and Wedges
 
