@@ -26,7 +26,10 @@ def _check_args(forms, args):
 
 def _join_args(args, sep=','):
     '''Takes an enumeration of arg names and values and returns a string of joined arg values'''
-    return sep.join( [str(arg_value) for _, arg_value in args] )
+    def stringify(val): # support iterables (by joining them)
+        if '__iter__' in dir(val): return ','.join(map(str, val))
+        return str(val)
+    return sep.join( [stringify(arg_value) for _, arg_value in args] )
 
 # See page TODO
 _hpgl_error_numbers = ['No error', 'Instruction not recognized', 'Wrong number of parameters', 'Out-of range parameter, or illegal character', 'Not used', 'Unknown character set', 'Position overflow (not reported with default E-mask value)', 'Buffer overflow for polygons']
@@ -828,6 +831,121 @@ def PS(length=None, width=None):
     return _cmd(f'PS{args};')
 
 # Chapter 13: Alternate Character Sets and User-Designed Characters
+
+def CA(set=None):
+    # See page 13-21
+    '''CA, Designate Alternate Character Set
+    USE: Designates a character set as the alternate character set to be used in labeling instructions. Use this instruction to provide an additional character set that you can easily access in a program.
+    '''
+    args = _check_args([
+        [],
+        ['set']
+    ], locals())
+    args = _join_args(args)
+    return _cmd(f'CA{args};')
+
+def CC(chord_angle=None):
+    # See page 13-23
+    '''CC, Character Chord Angle
+    USE: Sets the chord angle that determines the smoothness of characters drawn when you select one of the arc-font character sets for labeling.
+    '''
+    args = _check_args([
+        [],
+        ['chord_angle']
+    ], locals())
+    args = _join_args(args)
+    return _cmd(f'CC{args};')
+
+def CM(switch_mode=None, fallback_mode=None):
+    # See page 13-25
+    '''CM, Character Selection Mode
+    USE: Specifies mode of character set selection and usage. Read Choosing Other Character Selection Modes earlier in this chapter to determine if you need this instruction.
+    '''
+    args = _check_args([
+        [],
+        ['switch_mode'],
+        ['switch_mode', 'fallback_mode']
+    ], locals())
+    args = _join_args(args)
+    return _cmd(f'CM{args};')
+
+def CS(set=None):
+    # See page 13-27
+    '''CS, Designate Standard Character Set
+    USE: Designates a character set as the standard character set for labeling instructions. Use this instruction to change the default ANSI ASCII English set to one with characters appropriate to your application. This instruction is particularly useful if you plot most of your labels in a language other than English.
+    '''
+    args = _check_args([
+        [],
+        ['set']
+    ], locals())
+    args = _join_args(args)
+    return _cmd(f'CS{args};')
+
+def DL(character_number=None, *coordinates):
+    # See page 13-28
+    '''DL, Define Downloadable Character
+    USE: Allows you to design characters and stores them in a buffer for repeated use.
+    '''
+    if len(coordinates) == 0: del coordinates # Remove if empty, for argument check to work properly
+    args = _check_args([
+        [],
+        ['character_number'],
+        ['character_number', 'coordinates']
+    ], locals())
+    args = _join_args(args)
+    return _cmd(f'DL{args};')
+
+def DS(slot=None, set=None):
+    # See page 13-32
+    '''DS, Designate Character Set into Slot
+    USE: Designates up to four character sets to be immediately available for plotting. Used with ISO character sets and modes.
+    '''
+    args = _check_args([
+        [],
+        ['slot', 'set']
+    ], locals())
+    args = _join_args(args)
+    return _cmd(f'DS{args};')
+
+def IV(slot=None, left=None):
+    # See page 13-34
+    '''IV, Invoke Character Slot
+    USE: Invokes a character slot into either the right or left half of the in-use code table. Primarily used with ISO modes of character selection.
+    '''
+    args = _check_args([
+        [],
+        ['slot'],
+        ['slot', 'left']
+    ], locals())
+    args = _join_args(args)
+    return _cmd(f'IV{args};')
+
+def SA():
+    # See page 13-36
+    '''SA, Select Alternate Character Set
+    USE: The SA instruction selects the alternate character set (already designated by the CA instruction) for subsequent labeling. Use this instruction to shift from the currently selected standard set to the designated alternate set.
+    '''
+    return _cmd('SA;')
+
+def SS():
+    # See page 13-37
+    '''SS, Select Standard Character Set
+    USE: The SS instruction selects the standard set (already designated by the CS, Designate Standard Character Set, instruction) for subsequent labeling. Use this instruction to shift from the currently selected alternate set to the designated standard set.
+    '''
+    return _cmd('SS;')
+
+def UC(*increments):
+    # See page 13-38
+    '''UC, User-defined Character
+    USE: The UC instruction draws characters of your own design. Use this instruction to create characters or symbols not included in your plotter's character sets or to draw logos.
+    '''
+    if len(increments) == 0: del increments # Remove if empty, for argument check to work properly
+    args = _check_args([
+        [],
+        ['increments'],
+    ], locals())
+    args = _join_args(args)
+    return _cmd(f'UC{args};')
 
 # Part IV – Interfacing, Handshaking, Output, and Device Control
 # Chapter 14: Obtaining Information from the Plotter
