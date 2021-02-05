@@ -23,73 +23,108 @@ _status_bits = ['Pen down', 'P1 or P2 newly established; cleared by OP', 'Digiti
 # Chapter 3: Beginning Your HP-GL Program
 
 def DF():
+    # See page 3-14
     '''DF, Default
-    USE: Set certain graphics functions to their predefined default settings.
+    USE: Set certain graphics functions to their predefined default settings. Use this instruction to return the plotter to a known state while maintaining the current locations of P1 and P2. When you use DF at the beginning of a program, unwanted graphics parameters such as character size, slant, or scaling are not inherited from another program.
     '''
     return _cmd('DF;')
 
 def IN(partial=False):
+    # See page 3-17
     '''IN, Initialize
-    USE: Resets most plotter functions to their default settings.
+    USE: Resets most plotter functions to their default settings. Use this instruction to return the plotter to a known state and to cancel settings that may have been changed by a previous program.
     '''
     if partial:
         return _cmd('IN-1;')
     else:
         return _cmd('IN;')
 
-def IP(p1x, p1y, p2x, p2y):
+def IP(p1x=None, p1y=None, p2x=None, p2y=None):
+    # See page 3-19
     '''IP, Input P1 and P2
-    TODO
+    USE: Allows you to establish new or default locations for the scaling points P1 and P2. P1 and P2 are used by the scaling instruction (SC) to establish user-unit scaling. The IP instruction is often used to ensure that a plot is always the same size, regardless of where P1 and P2 might have been set from the front panel or the size of media loaded in the plotter. This instruction can also be used in advanced techniques such as plotting mirror images, enlarging/reducing plots, and enlarging/reducing relative character size or direction (refer to Chapters 7 and 9).
     '''
-    return _cmd('IP;')
+    if p1x == None:
+        return _cmd('IP;')
+    elif p2x == None:
+        return _cmd(f'IP{p1x},{p1y};')
+    else:
+        return _cmd(f'IP{p1x},{p1y},{p2x},{p2y};')
 
-def SC():
+def SC(xmin=None, xmax_xfactor=None, ymin=None, ymax_yfactor=None, type=None, left=None, bottom=None):
+    # See page 3-21
     '''SC, Scale
-    TODO
+    USE: Establishes a user-unit coordinate system by mapping user-defined coordinate values onto the scaling points P1 and P2. Thus, you can plot in units convenient to your application. In addition, you can use this instruction to establish automatic isotropic scaling or to relocate the origin and set a specific ratio of plotter units to user units. For a discussion of the basic concept of scaling, refer to Scaling in Chapter 2.
     '''
-    return _cmd('SC;')
+    if xmin == None:
+        return _cmd('SC;')
+    elif type == None:
+        return _cmd(f'SC{xmin},{xmax_xfactor},{ymin},{ymax_yfactor};')
+    elif left == None:
+        return _cmd(f'SC{xmin},{xmax_xfactor},{ymin},{ymax_yfactor},{type};')
+    else:
+        return _cmd(f'SC{xmin},{xmax_xfactor},{ymin},{ymax_yfactor},{type},{left},{bottom};')
 
 # Chapter 4: Drawing Lines and Rectangles
 
 def EA(x, y):
+    # See page 4-7
     '''EA, Edge Rectangle Absolute
-    TODO
+    USE: Defines and outline a rectangle using absolute coordinates. Use the EA instruction to create charts that require rectangles; for example, bar charts, flow charts, and organization charts.
     '''
     return _cmd(f'EA{x},{y};')
 
 def ER(x, y):
+    # See page 4-9
     '''ER, Edge Rectangle Relative
-    TODO
+    USE: Defines and outlines a rectangle using relative coordinates. Use ER to create charts that require rectangles; for example, bar charts, flow charts, and organization charts.
     '''
     return _cmd(f'ER{x},{y};')
 
-def PA(x, y):
+def PA(x=None, y=None):
+    # See page 4-11
     '''PA, Plot Absolute
-    TODO
+    USE: Establishes absolute plotting and moves the pen to the specified absolute coordinates using the current pen position.
     '''
-    return _cmd(f'PA{x},{y};')
+    if x == None:
+        return _cmd('PA;')
+    else:
+        return _cmd(f'PA{x},{y};')
 
-def PD(x, y):
+def PD(x=None, y=None):
+    # See page 4-12
     '''PD, Pen Down
-    TODO
+    USE: Lowers the pen onto the writing surface for drawing.
     '''
-    return _cmd(f'PD{x},{y};')
+    if x == None:
+        return _cmd('PD;')
+    else:
+        return _cmd(f'PD{x},{y};')
 
-def PR(x, y):
+def PR(x=None, y=None):
+    # See page 4-14
     '''PR, Plot Relative
-    TODO
+    USE: Establishes relative plotting and moves the pen to specified points, each sucessive move relative to the current pen location.
     '''
-    return _cmd(f'PR{x},{y};')
+    if x == None:
+        return _cmd('PR;')
+    else:
+        return _cmd(f'PR{x},{y};')
 
-def PU(x, y):
+def PU(x=None, y=None):
+    # See page 4-16
     '''PU, Pen Up
-    TODO
+    USE: Raises the pen from the plotting surface. Use this instruction to move the pen to the beginning of the next line.
     '''
-    return _cmd(f'PU{x},{y};')
+    if x == None:
+        return _cmd('PU;')
+    else:
+        return _cmd(f'PU{x},{y};')
 
 def SP(pen_number=None):
+    # See page 4-17
     '''SP, Select Pen
-    TODO
+    USE: Loads specified pen into the pen holder or returns the current pen to the carousel. Use the SP instruction to change pen colors or widths during a plot. At the end of every program, use SP to return the pen to the carousel.
     '''
     if pen_number == None:
         return _cmd('SP;')
@@ -98,6 +133,28 @@ def SP(pen_number=None):
 
 # Part II – Advanced Plotting
 # Chapter 5: Enhancing Your Plots
+
+def FT(type=None, spacing=None, angle=None):
+    # See page 5-6
+    '''FT, Fill Type
+    USE: Selects the shading pattern used to fill polygons (FP), rectangles (RA or RR), or wedges (WG). Use this instruction to enhance plots with solid fill, parallel lines (hatching), cross-hatching, or a fill pattern you designed using the user-defined fill type (UF) instruction.
+    '''
+    if type == None:
+        return _cmd('FT;')
+    elif spacing == None:
+        return _cmd(f'FT{type};')
+    elif angle == None:
+        return _cmd(f'FT{type},{spacing};')
+    else:
+        return _cmd(f'FT{type},{spacing},{angle};')
+
+def LT():
+    # See page 5-9
+    '''LT, Line Type
+    USE: 
+    TODO
+    '''
+    return _cmd('XY;')
 
 # Chapter 6: Drawing Circles, Arcs, and Wedges
 
