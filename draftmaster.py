@@ -289,6 +289,82 @@ def YT():
 
 # Chapter 6: Drawing Circles, Arcs, and Wedges
 
+def AA(x, y, arc_angle, chord_tolerance=None):
+    # See page 6-7
+    # Corrected chord_angle parameter to chord_tolerance
+    '''AA, Arc Absolute
+    USE: Draws an arc, using absolute coordinates, that starts at the current pen location and uses the specified center point.
+    '''
+    args = _check_args([
+        ['x', 'y', 'arc_angle'],
+        ['x', 'y', 'arc_angle', 'chord_tolerance']
+    ], locals())
+    args = _join_args(args)
+    return _cmd(f'AA{args};')
+
+def AR(x, y, arc_angle, chord_tolerance=None):
+    # See page 6-9
+    # Corrected chord_angle parameter to chord_tolerance
+    '''AR, Arc Relative
+    USE: Draws an arc, using relative coordinates, that starts at the current pen location and uses the specified center point.
+    '''
+    args = _check_args([
+        ['x', 'y', 'arc_angle'],
+        ['x', 'y', 'arc_angle', 'chord_tolerance']
+    ], locals())
+    args = _join_args(args)
+    return _cmd(f'AR{args};')
+
+def CI(radius, chord_tolerance=None):
+    # See page 6-11
+    '''CI, Circle
+    USE: Draws a circle using the specified radius and chord tolerance. If you want a filled circle, refer to the WG or PM instruction.
+    '''
+    args = _check_args([
+        ['radius'],
+        ['radius' 'chord_tolerance']
+    ], locals())
+    args = _join_args(args)
+    return _cmd(f'CI{args};')
+
+def CT(n=None):
+    # See page 6-15
+    '''CT, Chord Tolerance
+    USE: Determines whether the chord tolerance parameter of the CI, AA, AR, EW, WG instructions is interpreted as a chord angle in degrees or as a deviation distance in current units.
+    '''
+    args = _check_args([
+        [],
+        ['n']
+    ], locals())
+    args = _join_args(args)
+    return _cmd(f'CT{args};')
+
+def EW(radius, start_angle, sweep_angle, chord_tolerance=None):
+    # See page 6-17
+    # Corrected chord_angle parameter to chord_tolerance
+    '''EW, Edge Wedge
+    USE: Outlines any wedge. Use this instruction to draw sectors of pie charts.
+    '''
+    args = _check_args([
+        ['radius', 'start_angle', 'sweep_angle'],
+        ['radius', 'start_angle', 'sweep_angle', 'chord_tolerance'],
+    ], locals())
+    args = _join_args(args)
+    return _cmd(f'EW{args};')
+
+def WG(radius, start_angle, sweep_angle, chord_tolerance=None):
+    # See page 6-21
+    # Corrected chord_angle parameter to chord_tolerance
+    '''WG, Fill Wedge
+    USE: Defines and fills any wedge. Use this instruction to draw filled sectors of a pie chart.
+    '''
+    args = _check_args([
+        ['radius', 'start_angle', 'sweep_angle'],
+        ['radius', 'start_angle', 'sweep_angle', 'chord_tolerance'],
+    ], locals())
+    args = _join_args(args)
+    return _cmd(f'WG{args};')
+
 # Chapter 7: Labeling Your Plots
 
 def LB(string, terminator = chr(3)):
