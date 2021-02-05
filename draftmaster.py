@@ -367,11 +367,156 @@ def WG(radius, start_angle, sweep_angle, chord_tolerance=None):
 
 # Chapter 7: Labeling Your Plots
 
-def LB(string, terminator = chr(3)):
-    '''LB, Label
-    TODO
+def BL(cc=None, terminator='\x03'):
+    # See page 7-11
+    '''BL, Buffer Label
+    USE: Stores a label in the label buffer. You can then use the output length (OL) instruction to determine its space requirement prior to drawing it. Or, you can use the plot buffered label (PB) instruction to repeatedly plot this label.
     '''
-    return _cmd(string + terminator)
+    args = _check_args([
+        ['terminator'],
+        ['cc', 'terminator'],
+    ], locals())
+    args = _join_args(args)
+    return _cmd(f'BL{args}') # Note this command doesn't end with ';'
+
+def CP(spaces=None, lines=None):
+    # See page 7-13
+    '''CP, Character Plot
+    USE: Moves the pen the specified number of character plot cells from the current pen location (e.g., to indent or center a label).
+    '''
+    args = _check_args([
+        [],
+        ['spaces', 'lines'],
+    ], locals())
+    args = _join_args(args)
+    return _cmd(f'CP{args};')
+
+def DI(run=None, rise=None):
+    # See page 7-16
+    '''DI, Direction Absolute
+    USE: Specifies the direction in which labels are drawn, independent of P1 and P2 settings. Use this instruction to change lebeling direction when you are labeling curves in line charts, schematic drawings, blueprints, and survey boundaries.
+    '''
+    args = _check_args([
+        [],
+        ['run', 'rise'],
+    ], locals())
+    args = _join_args(args)
+    return _cmd(f'DI{args};')
+
+def DR(run=None, rise=None):
+    # See page 7-22
+    '''DR, Relative Direction
+    USE: Specifies the direction in which labels are drawn, relative to the scaling points P1 and P2. Label direction is adjusted wehen P1 and P2 change so that labels maintain the same relationship to the plotted data. Use DI if you want label direction to be independent of P1 and P2.
+    '''
+    args = _check_args([
+        [],
+        ['run', 'rise'],
+    ], locals())
+    args = _join_args(args)
+    return _cmd(f'DR{args};')
+
+def DT(label_terminator=None):
+    # See page 7-27
+    '''DT, Define Label Terminator
+    USE: Specifies the character to be used as the label terminator. Use this instruction to define a new label terminator if your computer cannot use the default label terminator (ETX, decimal code 3).
+    '''
+    args = _check_args([
+        [],
+        ['label_terminator'],
+    ], locals())
+    args = _join_args(args)
+    return _cmd(f'DT{args};')
+
+def DV(n=None):
+    # See page 7-29
+    '''DV, Direction Vertical
+    USE: Specifies vertical mode as the direction for subsequent labels. Use this instruction to 'stack' horizontal characters in a column. This is especially useful when using the Kanji character set (refer to Appendix D).
+    '''
+    args = _check_args([
+        [],
+        ['n'],
+    ], locals())
+    args = _join_args(args)
+    return _cmd(f'DV{args};')
+
+def ES(spaces=None, lines=None):
+    # See page 7-31
+    '''ES, Extra Space
+    USE: Adjusts space between characters and lines of labels without affecting character size.
+    '''
+    args = _check_args([
+        [],
+        ['spaces'],
+        ['spaces', 'lines']
+    ], locals())
+    args = _join_args(args)
+    return _cmd(f'ES{args};')
+    
+def LB(cc, terminator='\x03'):
+    # See page 7-33
+    '''LB, Label
+    USE: Plots text using the currently defined character set.
+    '''
+    args = _check_args([
+        ['cc', 'terminator'],
+    ], locals())
+    args = _join_args(args)
+    return _cmd(f'LB{args}') # Note this command doesn't end with ';'
+
+def LO(position_number=None):
+    # See page 7-35
+    '''LO, Label origin
+    USE: Positions labels relative to current pen location. Use LO to center, left justify, or right justify labels. The label can be drawn above or below the current pen location and can also be offset by an amount equal to 1/2 the character's width and height.
+    '''
+    args = _check_args([
+        [],
+        ['position_number']
+    ], locals())
+    args = _join_args(args)
+    return _cmd(f'LO{args};')
+
+def PB():
+    # See page 7-38
+    '''PB, Print Buffered Label
+    USE: Prints the contents of the label buffer.
+    '''
+    return _cmd('PB;')
+
+def SI(width=None, height=None):
+    # See page 7-39
+    '''SI, Absolute Character Size
+    USE: The SI instruction specifies the size of labeling characters in centimetres. Use this instruction to establish character sizing that is not dependent on the settings of P1 and P2.
+    '''
+    args = _check_args([
+        [],
+        ['width', 'height']
+    ], locals())
+    args = _join_args(args)
+    return _cmd(f'SI{args};')
+
+def SL(tangent=None):
+    # See page 7-42
+    '''SL, Character Slant
+    USE: The SL instruction specifies the slant at which labels are drawn. Use this instruction to create slanted text for emphasis, or to reestablish upright labeling after an SL instruction with parameters has been in effect.
+    '''
+    args = _check_args([
+        [],
+        ['tangent']
+    ], locals())
+    args = _join_args(args)
+    return _cmd(f'SL{args};')
+
+def SR(width=None, height=None):
+    # See page 7-45
+    '''SR, Relative Character Size
+    USE: The SR instruction specifies the size of characters as a percentage of the distance between P1 and P2. Use this instruction to establish relative character sizes so if the P1/P2 distance changes, the character sizes adjust to occupy the same relative amount of space.
+    '''
+    args = _check_args([
+        [],
+        ['width', 'height']
+    ], locals())
+    args = _join_args(args)
+    return _cmd(f'SR{args};')
 
 # Chapter 8: Drawing Polygons and Using the Polygon Buffer
 
