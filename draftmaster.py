@@ -286,3 +286,12 @@ def OT():
 
 # Chapter 16: Interfacing and Handshaking
 
+
+
+# Make all those uppercase commands available as lowercase as well
+def _add_lowercase():
+    g = globals()
+    cmds = list( filter(lambda g: len(g) == 2 and g.isupper(), globals()) )
+    for cmd in cmds:
+        g[cmd.lower()] = g[cmd]
+_add_lowercase()
