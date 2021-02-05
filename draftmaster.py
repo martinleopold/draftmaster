@@ -27,7 +27,7 @@ def _check_args(forms, args):
 def _join_args(args, sep=','):
     '''Takes an enumeration of arg names and values and returns a string of joined arg values'''
     def stringify(val): # support iterables (by joining them)
-        if '__iter__' in dir(val): return ','.join(map(str, val))
+        if '__iter__' in dir(val): return sep.join(map(str, val))
         return str(val)
     return sep.join( [stringify(arg_value) for _, arg_value in args] )
 
@@ -1048,69 +1048,129 @@ def OT():
 # Chapter 15: Device-Control Instructions
 
 def ESC_A():
-    # page 15-7
+    # See page 15-7
     '''ESC.A, Output Identification
     USE: Outputs the plotter's model number and firmware revision level.
     '''
     return _cmd('\x1b.A');
 
 def ESC_B():
-    # page 15-8
+    # See page 15-8
     '''ESC.B, Output Buffer Space
     USE: Outputs the plotter's currently available logical I/O buffer space.
     '''
     return _cmd('\x1b.B');
 
 def ESC_E():
-    # page 15-8
+    # See page 15-8
     '''ESC.E, Output Extended Error
     USE: Outputs the error number for any I/O error related to device-control instructions and clears the error message from the front-panel display. Use this instruction when debugging a program to determine which errors have occured (if any). Additionally, if you are using the RS-232-C interface, you can use ESC.E with ESC.@ to do block I/O error checking.
     '''
     return _cmd('\x1b.E');
 
 def ESC_J():
-    # page 15-11
+    # See page 15-11
     '''ESC.J, Abort Device-Control
     USE: Aborts any device-control instruction that may be partially decoded or executed. Use this instruction in an initialization sequence when you first access the plotter.
     '''
     return _cmd('\x1b.J');
 
 def ESC_K():
-    # page 15-12
+    # See page 15-12
     '''ESC.K, Abort Graphics
-    Aborts any partially decoded HP-GL instruction and discards remaining instructions in the I/O, pen sort, bidirectional, and vector buffers. Use this instruction as part of an initialization sequence when starting a new program or to terminate plotting of HP-GL instructions in the buffer.
+    USE: Aborts any partially decoded HP-GL instruction and discards remaining instructions in the I/O, pen sort, bidirectional, and vector buffers. Use this instruction as part of an initialization sequence when starting a new program or to terminate plotting of HP-GL instructions in the buffer.
     '''
     return _cmd('\x1b.K');
 
 def ESC_L():
-    # page 15-13
+    # See page 15-13
     '''ESC.L, Output Buffer Size When Empty
-    Outputs the size (in bytes) of the logical I/O buffer. The response is not transmitted by the plotter until the buffer is empty.
+    USE: Outputs the size (in bytes) of the logical I/O buffer. The response is not transmitted by the plotter until the buffer is empty.
     '''
     return _cmd('\x1b.L');
 
 def ESC_O():
-    # page 15-14
+    # See page 15-14
     '''ESC.O, Output Extended Status
-    Outputs the plotter's extended status. Use this instruction to obtain information about the current operating status of the plotter.
+    USE: Outputs the plotter's extended status. Use this instruction to obtain information about the current operating status of the plotter.
     '''
     return _cmd('\x1b.O');
 
-# def ESC_Q(): TODO
+def ESC_Q(n=None):
+    # See page 15-17
+    '''ESC.Q, Set Monitor Mode
+    USE: Enables or disables either monitor mode 1 (parse) or monitor mode 2 (receive). Use this instruction as a debugging aid in program development. This instruction is valid only when you have set Monitor Mode: ON from the front panel (refer to the User's Guide for more information).
+    '''
+    args = _check_args([
+        [],
+        ['n']
+    ], locals())
+    args = _join_args(args, sep=';')
+    return _cmd(f'\x1b.Q{args}:');
 
 def ESC_R():
-    # page 15-19
+    # See page 15-19
     '''ESC.R, Reset
-    Resets certain I/O conditions to power-up default states. Use this instruction to establish known conditions when starting a new plot.
+    USE: Resets certain I/O conditions to power-up default states. Use this instruction to establish known conditions when starting a new plot.
     '''
     return _cmd('\x1b.R');
 
 def ESC_S(n):
-    # page 15-20
+    # See page 15-20
     '''ESC.S, Output Configurable Memory Size
-    Outputs the total memory size of user-definable RAM, or the memory space available in one of its five buffers: the physical I/O buffer, polygon buffer, downloadable character buffer, vector buffer, and pen sort buffer. Use this instruction to determine how much memory is currently allocated to each buffer or to confirm the allocation performed by GM, ESC.T, or ESC.R.
+    USE: Outputs the total memory size of user-definable RAM, or the memory space available in one of its five buffers: the physical I/O buffer, polygon buffer, downloadable character buffer, vector buffer, and pen sort buffer. Use this instruction to determine how much memory is currently allocated to each buffer or to confirm the allocation performed by GM, ESC.T, or ESC.R.
     '''
     return _cmd(f'\x1b.S{n}:');
+
+def ESC_T(physical_io_buffer=None, polygon_buffer=None, downloadable_character_buffer=None, vector_buffer=None, pen_sort_buffer=None):
+    # See page 15-21
+    '''ESC.T, Allocate Configurable Memory
+    USE: Allocates memory in user-definable RAM, which consists of five buffers: the physical I/O buffer, polygon buffer, downloadable character buffer, vector buffer, and pen sort buffer. Use this instruction to change the sizes of these buffers as needed.
+    '''
+    args = _check_args([
+        [],
+        ['physical_io_buffer'],
+        ['physical_io_buffer', 'polygon_buffer'],
+        ['physical_io_buffer', 'polygon_buffer', 'downloadable_character_buffer'],
+        ['physical_io_buffer', 'polygon_buffer', 'downloadable_character_buffer', 'vector_buffer'],
+        ['physical_io_buffer', 'polygon_buffer', 'downloadable_character_buffer', 'vector_buffer', 'pen_sort_buffer'],
+    ], locals())
+    args = _join_args(args, sep=';')
+    return _cmd(f'\x1b.T{args}:');
+
+def ESC_U():
+    # See page 15-24
+    '''ESC.U, End Flush Mode
+    USE: Ends flush mode. Use this instruction in spooling applications to end flush mode, thus allowing the plotter to begin parsing graphics instructions again.
+    '''
+    return _cmd('\x1b.U');
+
+def ESC_Y():
+    # See page 15-25
+    '''ESC.Y or ESC.(, Plotter On
+    USE: Enables the plotter to accept data and interpret it as graphics or device-control instructions. Use this instruction in Eavesdrop (RS-232-C interface only) to establish programmed-on operation.
+    '''
+    return _cmd('\x1b.Y');
+
+def ESC_Z():
+    # See page 15-25
+    '''ESC.Z or ESC.), Plotter Off
+    USE: Disables the plotter so that it accepts only a plotter-on instruction. Use this instruction in Eavesdrop (RS-232-C interface only) to establish programmed-off operation.
+    '''
+    return _cmd('\x1b.Y');
+
+def ESC_AT(logical_io_buffer_size=None, io_conditions=None):
+    # See page 15-26
+    '''ESC.@, Set Plotter Configuration
+    USE: For RS-232-C users, this instruction sets an effective logical I/O buffer size and controls hardwire handshake, communications protocol, monitor modes 1 and 2, and block I/O error checking.
+    '''
+    args = _check_args([
+        [],
+        ['logical_io_buffer_size'],
+        ['logical_io_buffer_size', 'io_conditions']
+    ], locals())
+    args = _join_args(args, sep=';')
+    return _cmd(f'\x1b.@{args}:');
 
 # Chapter 16: Interfacing and Handshaking
 
