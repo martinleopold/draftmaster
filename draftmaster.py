@@ -762,11 +762,70 @@ def DP():
 def OD():
     # See page 11-8
     '''OD, Output Digitized Point and Pen Status
-    Outputs the X,Y coordinates and up/down pen position associated with the last digitized point. Use this instruction  after the DP instruction to return the coordinates of the digitized point to your computer.
+    USE: Outputs the X,Y coordinates and up/down pen position associated with the last digitized point. Use this instruction  after the DP instruction to return the coordinates of the digitized point to your computer.
     '''
     return _cmd('OD;')
 
 # Chapter 12: Rollfeed Instructions and Long-Axis Printing
+
+def AF():
+    # See page 12-9
+    '''AF, Advance Full Page
+    USE: Advances roll media one full page length and establishes the origin at the center of the new page.
+    '''
+    return _cmd('AF;')
+
+def AH():
+    # See page 12-10
+    '''AH, Advance Half Page
+    USE: Advances roll media one half page length and establishes the origin at the center of the new page.
+    '''
+    return _cmd('AH;')
+
+def EC(n=None):
+    # See page 12-11
+    '''EC, Enable Cut Line
+    USE: Draws a dashed cut line between 'pages' on roll media to indicate where to cut the media. Used with AF, AH, and PG instructions.
+    '''
+    args = _check_args([
+        [],
+        ['n']
+    ], locals())
+    args = _join_args(args)
+    return _cmd(f'EC{args};')
+
+def FR():
+    # See page 12-12
+    '''FR, Frame Advance
+    USE: Advances media to the next plot frame and calculates a relative coordinate system for that frame. Use FR to do multi-frame long-axis plotting.
+    '''
+    return _cmd('FR;')
+
+def PG(n=None):
+    # See page 12-13
+    '''PG, Page Feed
+    USE: Advances roll media one page length and establishes the plotter-unit origin at the center of the new page.
+    '''
+    args = _check_args([
+        [],
+        ['n']
+    ], locals())
+    args = _join_args(args)
+    return _cmd(f'PG{args};')
+
+def PS(length=None, width=None):
+    # See page 12-14
+    # Note: Corrected AF to AH in use instruction
+    '''PS, Page Size
+    USE: Changes the size of the hard clip limits while keeping the origin in the center of the plot. This allows for variable length page advances with the AF, AH, FR and PG instructions.
+    '''
+    args = _check_args([
+        [],
+        ['length'],
+        ['length', 'width']
+    ], locals())
+    args = _join_args(args)
+    return _cmd(f'PS{args};')
 
 # Chapter 13: Alternate Character Sets and User-Designed Characters
 
