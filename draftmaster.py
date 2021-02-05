@@ -611,76 +611,136 @@ def RO(n=None):
 
 # Chapter 10: Advanced Pen Control and Front-Panel Interaction
 
-def AP(n = None):
+def AP(n=None):
+    # See page 10-4
     '''AP, Automatic Pen Operations
     USE: Controls automatic pen operations such as returning a pen to the carousel if it has been in the older without drawing for a certain time.
-    TODO
     '''
-    if n == None:
-        return _cmd('AP;')
-    else:
-        return _cmd(f'AP{n};')
+    args = _check_args([
+        [],
+        ['n']
+    ], locals())
+    args = _join_args(args)
+    return _cmd(f'AP{args};')
 
-def AS(pen_acceleration = None, pen_number = None):
+def AS(pen_acceleration=None, pen_number=None):
+    # See page 10-6
     '''AS, Acceleration Select
     USE: Sets pen acceleration for one or all pens. The default acceleration is suitable for all recommended pen and media combinations. Slowing the acceleration may improve line quality if you are using heavier than recommended media.
-    TODO
     '''
-    if pen_acceleration == None:
-        return _cmd('AS;')
-    elif pen_number == None:
-        return _cmd(f'AP{pen_acceleration};')
-    else:
-        return _cmd(f'AP{pen_acceleration},{pen_number};') 
+    args = _check_args([
+        [],
+        ['pen_acceleration'],
+        ['pen_acceleration', 'pen_number']
+    ], locals())
+    args = _join_args(args)
+    return _cmd(f'AS{args};')
 
-def CV(n = None):
+def CV(n=None, input_delay=None):
+    # See page 10-7
+    # Note: Added input_delay parameter
     '''CV, Curved Line Generator
     USE: Collects vectors (line segments) in the vector buffer so that they can be plotted as a group. This allows the plotter to plot in a continuous motion, rather than stopping and starting at each vector endpoint. As a result, curves appear smoother.
-    TODO: is input delay a seperate parameter?
     '''
-    if n == None:
-        return _cmd('CV;')
-    else:
-        return _cmd(f'CV{n};')
+    args = _check_args([
+        [],
+        ['n'],
+        ['n', 'input_delay'],
+    ], locals())
+    args = _join_args(args)
+    return _cmd(f'CV{args};')
 
-def FS(pen_force = None, pen_number = None):
+def FS(pen_force=None, pen_number=None):
+    # See page 10-9
     '''FS, Force Select
     USE: Sets pen pressure to the paper for one or all pens. Use this instruction to optimize pen life and line quality for each pen and paper combination.
-    TODO
     '''
-    if pen_force == None:
-        return _cmd('FS;')
-    elif pen_number == None:
-        return _cmd(f'FS{pen_force};')
-    else:
-        return _cmd(f'FS{pen_force},{pen_number};')
+    args = _check_args([
+        [],
+        ['pen_force'],
+        ['pen_force', 'pen_number'],
+    ], locals())
+    args = _join_args(args)
+    return _cmd(f'FS{args};')
+
+def GP(group_number=None, pen_number=None, number_of_pens=None, length=None):
+    # See page 10-11
+    '''GP, Group Pen
+    USE: Assigns pens of the same type/color to a group in order to extend the effective writing distance beyond the life of one pen.
+    '''
+    args = _check_args([
+        [],
+        ['group_number'],
+        ['group_number', 'pen_number'],
+        ['group_number', 'pen_number', 'number_of_pens'],
+        ['group_number', 'pen_number', 'number_of_pens', 'length'],
+    ], locals())
+    args = _join_args(args)
+    return _cmd(f'GP{args};')
+
+def KY(key=None, function=None):
+    # See page 10-13
+    '''KY, Define Key
+    USE: Assigns a predefined function to one of the front-panel function keys. Use this instruction in conjunction with the WD instruction when designing interactive programs.
+    '''
+    args = _check_args([
+        [],
+        ['key'],
+        ['key', 'function']
+    ], locals())
+    args = _join_args(args)
+    return _cmd(f'KY{args};')
 
 def NR():
+    # See page 10-16
     '''NR, Not Ready
     USE: Programmatically simulates pressing the front-panel View button. However, you cannot take the plotter out of the View state with the NR instruction.
-    TODO
     '''
     return _cmd('NR;')
 
-
 def OK():
-    # page 10-17
+    # See page 10-17
     '''OK, Output Key
     Outputs a number that indicates which, if any, of the front-panel function keys has been pressed. Use this instruction in conjunction with the WD instruction when designing interactive programs.
     '''
     return _cmd('OK;')
 
-def VS(pen_velocity = None, pen_number = None):
+def SG(pen_number=None):
+    # See page 10-19
+    '''SG, Select Pen Group
+    USE: Allows the plotter to select a predesignated group of pens. Use this instruction with the GP instruction to extend the effective writing distance beyond the limits of one pen.
+    '''
+    args = _check_args([
+        [],
+        ['pen_number']
+    ], locals())
+    args = _join_args(args)
+    return _cmd(f'SG{args};')
+
+def VS(pen_velocity=None, pen_number=None):
+    # See page 10-20
     '''VS, Velocity Select
     USE: Specifies pen speed. Use the instruction to optimize pen life and line quality for each pen and media combination. Create a slightly thicker line on any media by slowing the pen speed.
-    TODO
     '''
-    if pen_velocity == None:
-        return _cmd('VS;')
-    elif pen_number == None:
-        return _cmd(f'VS{pen_velocity};')
-    else:
-        return _cmd(f'VS{pen_velocity},{pen_number};')
+    args = _check_args([
+        [],
+        ['pen_velocity'],
+        ['pen_velocity', 'pen_number']
+    ], locals())
+    args = _join_args(args)
+    return _cmd(f'VS{args};')
+
+def WD(cc=None, terminator='\x03'):
+    # See page 10-22
+    '''WD, Write to Display
+    USE: Specifies pen speed. Use the instruction to optimize pen life and line quality for each pen and media combination. Create a slightly thicker line on any media by slowing the pen speed.
+    '''
+    args = _check_args([
+        ['terminator'],
+        ['cc', 'terminator']
+    ], locals())
+    args = _join_args(args)
+    return _cmd(f'WD{args}') # Note this command doesn't end with ';'
 
 # Part III – Special Applications
 # Chapter 11: Digitizing
