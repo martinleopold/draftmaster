@@ -520,6 +520,48 @@ def SR(width=None, height=None):
 
 # Chapter 8: Drawing Polygons and Using the Polygon Buffer
 
+def EP():
+    # See page 8-15
+    '''EP, Edge Polygon
+    USE: Outlines the polygon currently stored in the polygon buffer. Use this instruction to edge polygons that you defined in polygon mode and with the rectangle and wedge instructions (RA, RR, and WG).
+    '''
+    return _cmd('EP;')
+
+def FP():
+    # See page 8-17
+    '''FP, Fill Polygon
+    USE: Fills the polygon currently in the polygon buffer. Use FP to fill polygons defined in polygon mode and by the edge rectangle and wedge instructions (EA, ER, and EW).
+    '''
+    return _cmd('FP;')
+
+def GM(polygon_buffer=None, downloadable_character_buffer=None, reserved_buffer=None, vector_buffer=None, pen_sort_buffer=None):
+    # See page 8-19
+    '''GM, Graphics Memory
+    USE: Allocates memory to four of the five buffers in the configurable graphics memory.
+    '''
+    args = _check_args([
+        [],
+        ['polygon_buffer'],
+        ['polygon_buffer', 'downloadable_character_buffer'],
+        ['polygon_buffer', 'downloadable_character_buffer', 'reserved_buffer'],
+        ['polygon_buffer', 'downloadable_character_buffer', 'reserved_buffer' 'vector_buffer'],
+        ['polygon_buffer', 'downloadable_character_buffer', 'reserved_buffer' 'vector_buffer', 'pen_sort_buffer'],
+    ], locals())
+    args = _join_args(args)
+    return _cmd(f'GM{args};')
+
+def PM(n=None):
+    # See page 8-21
+    '''PM, Polygon Mode Instruction
+    USE: Enters polygon mode for defining shapes such as block letters, logos, surface charts, or any unique or intricate area, and exits for subsequent filling and/or edging. Fills polygons using the fill polygon (FP) instruction and/or outline them using the edge polygon (EP) instruction.
+    '''
+    args = _check_args([
+        [],
+        ['n']
+    ], locals())
+    args = _join_args(args)
+    return _cmd(f'PM{args};')
+
 # Chapter 9: Changing Picture Area and Orientation
 
 def OH():
