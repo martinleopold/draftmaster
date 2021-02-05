@@ -183,6 +183,110 @@ def LT(pattern_number=None, pattern_length=None):
     args = _join_args(args)
     return _cmd(f'LT{args};')
 
+def PT(pen_thickness=None):
+    # See page 5-12
+    '''PT, Pen Thickness
+    USE: Determines the spacing between the parallel lines in solid fill patterns according to the pen tip thickness.
+    '''
+    args = _check_args([
+        [],
+        ['pen_thickness'],
+    ], locals())
+    args = _join_args(args)
+    return _cmd(f'PT{args};')
+
+def RA(x, y):
+    # See page 5-14
+    '''RA, Fill Rectangle Absolute
+    USE: Deines and fills a rectangle using absolute coordinates. Use this instruction to fill rectangular shapes in bar charts, logos, and other plots. To outline a rectangle using absolute coordinates, use the EA instruction.
+    '''
+    _check_args([
+        ['x', 'y']
+    ], locals())
+    return _cmd(f'RA{x},{y};')
+
+def RR(x, y):
+    # See page 5-16
+    '''RA, Fill Rectangle Relative
+    USE: Deines and fills a rectangle using relative coordinates. Use this instruction to fill rectangular shapes in bar charts, logos, and other plots. To outline a rectangle using relative coordinates, use the ER instruction.
+    '''
+    _check_args([
+        ['x', 'y']
+    ], locals())
+    return _cmd(f'RR{x},{y};')
+
+def SM(character=None, character2=None):
+    # See page 5-18
+    '''SM, Symbol Mode
+    USE: Draws the specified symbol at each X,Y coordinate point. Use symbol mode to create scattergrams, indicate points on geometric drawings, and differentiate data points on multi-line graphs.
+    '''
+    args = _check_args([
+        [],
+        ['character'],
+        ['character', 'character2']
+    ], locals())
+    args = _join_args(args)
+    return _cmd(f'SM{args};')
+
+def TL(positive_tick=None, negative_tick=None):
+    # See page 5-20
+    '''TL, Tick Length
+    USE: Specifies the length of the tick marks produced by the tick instructions (XT and YT). Use this instruction to adjust both the positive and negative portions of tick marks, and to establish a tick length for drawing grids.
+    '''
+    args = _check_args([
+        [],
+        ['positive_tick'],
+        ['positive_tick', 'negative_tick']
+    ], locals())
+    args = _join_args(args)
+    return _cmd(f'TL{args};')
+
+def UF(gap1=None, gap2=None, gap3=None, gap4=None, gap5=None, gap6=None, gap7=None, gap8=None, gap9=None, gap10=None, gap11=None, gap12=None, gap13=None, gap14=None, gap15=None, gap16=None, gap17=None, gap18=None, gap19=None, gap20=None):
+    # See page 5-23
+    '''UF, User-Defined Fill Type
+    USE: Defines a fill pattern composed of 'gaps' between parallel lines such as a semilog or candy-stripe effect. All fil instructions (FP, RA, RR, and WG) can use this fill type.
+    '''
+    args = _check_args([
+        [],
+        ['gap1'],
+        ['gap1', 'gap2'],
+        ['gap1', 'gap2', 'gap3'],
+        ['gap1', 'gap2', 'gap3'],
+        ['gap1', 'gap2', 'gap3', 'gap4'],
+        ['gap1', 'gap2', 'gap3', 'gap4', 'gap5'],
+        ['gap1', 'gap2', 'gap3', 'gap4', 'gap5', 'gap6'],
+        ['gap1', 'gap2', 'gap3', 'gap4', 'gap5', 'gap6', 'gap7'],
+        ['gap1', 'gap2', 'gap3', 'gap4', 'gap5', 'gap6', 'gap7', 'gap8'],
+        ['gap1', 'gap2', 'gap3', 'gap4', 'gap5', 'gap6', 'gap7', 'gap8', 'gap9'],
+        ['gap1', 'gap2', 'gap3', 'gap4', 'gap5', 'gap6', 'gap7', 'gap8', 'gap9', 'gap10'],
+        ['gap1', 'gap2', 'gap3', 'gap4', 'gap5', 'gap6', 'gap7', 'gap8', 'gap9', 'gap10', 'gap11'],
+        ['gap1', 'gap2', 'gap3', 'gap4', 'gap5', 'gap6', 'gap7', 'gap8', 'gap9', 'gap10', 'gap11', 'gap12'],
+        ['gap1', 'gap2', 'gap3', 'gap4', 'gap5', 'gap6', 'gap7', 'gap8', 'gap9', 'gap10', 'gap11', 'gap12', 'gap13'],
+        ['gap1', 'gap2', 'gap3', 'gap4', 'gap5', 'gap6', 'gap7', 'gap8', 'gap9', 'gap10', 'gap11', 'gap12', 'gap13', 'gap14'],
+        ['gap1', 'gap2', 'gap3', 'gap4', 'gap5', 'gap6', 'gap7', 'gap8', 'gap9', 'gap10', 'gap11', 'gap12', 'gap13', 'gap14', 'gap15'],
+        ['gap1', 'gap2', 'gap3', 'gap4', 'gap5', 'gap6', 'gap7', 'gap8', 'gap9', 'gap10', 'gap11', 'gap12', 'gap13', 'gap14', 'gap15', 'gap16'],
+        ['gap1', 'gap2', 'gap3', 'gap4', 'gap5', 'gap6', 'gap7', 'gap8', 'gap9', 'gap10', 'gap11', 'gap12', 'gap13', 'gap14', 'gap15', 'gap16', 'gap17'],
+        ['gap1', 'gap2', 'gap3', 'gap4', 'gap5', 'gap6', 'gap7', 'gap8', 'gap9', 'gap10', 'gap11', 'gap12', 'gap13', 'gap14', 'gap15', 'gap16', 'gap17', 'gap18'],
+        ['gap1', 'gap2', 'gap3', 'gap4', 'gap5', 'gap6', 'gap7', 'gap8', 'gap9', 'gap10', 'gap11', 'gap12', 'gap13', 'gap14', 'gap15', 'gap16', 'gap17', 'gap18', 'gap19'],
+        ['gap1', 'gap2', 'gap3', 'gap4', 'gap5', 'gap6', 'gap7', 'gap8', 'gap9', 'gap10', 'gap11', 'gap12', 'gap13', 'gap14', 'gap15', 'gap16', 'gap17', 'gap18', 'gap19', 'gap20']
+    ], locals())
+    args = _join_args(args)
+    return _cmd(f'TL{args};')
+
+def XT():
+    # See page 5-28
+    '''XT, X-Tick
+    USE: Draws a vertical (parallel to the Y-axis) tick at the current pen location. Use this instruction to draw vertical tick marks on axes, grid lines, or lines centered on or starting at the current pen location.
+    '''
+    return _cmd('XT;')
+
+def YT():
+    # See page 5-29
+    '''YT, Y-Tick
+    USE: Draws a horizontal (parallel to the X-axis) tick at the current pen location. Use this instruction to draw horizontal tick marks on axes, grid lines, or lines centered on or starting at the current pen location.
+    '''
+    return _cmd('YT;')
+
 # Chapter 6: Drawing Circles, Arcs, and Wedges
 
 # Chapter 7: Labeling Your Plots
