@@ -564,23 +564,50 @@ def PM(n=None):
 
 # Chapter 9: Changing Picture Area and Orientation
 
+def IW(x1=None, y1=None, x2=None, y2=None):
+    # See page 9-8
+    '''IW, Input Window
+    USE: Defines a rectangular area, or window, that establishes soft-clip limits. Subsequent programmed pen motion will be restricted to this area. Use this instruction when you want to be sure that your plot falls within a specific plotting area.
+    '''
+    args = _check_args([
+        [],
+        ['x1', 'y1', 'x2', 'y2']
+    ], locals())
+    args = _join_args(args)
+    return _cmd(f'IW{args};')
+
 def OH():
+    # See page 9-11
     '''OH, Output Hard-Clip Limits
-    Outputs the X,Y coordinates of the current hard-clip limits. Use this instruction to determine the plotter unit dimensions of the area in which plotting can occur.
+    USE: Outputs the X,Y coordinates of the current hard-clip limits. Use this instruction to determine the plotter unit dimensions of the area in which plotting can occur.
     '''
     return _cmd('OH;')
 
 def OP():
+    # See page 9-12
     '''OP, Output P1 and P2
-    Outputs the X,Y coordinates (in plotter units) of the current scaling points P1 and P2. Use this instruction to determine the numeric coordinates of P1 and P2 when they have been set manually, and to help compute the number of plotter units per user unit when scaling is on. This instruction can also be used with the input (IW) instruction to programmatically set the window to P1 and P2.
+    USE: Outputs the X,Y coordinates (in plotter units) of the current scaling points P1 and P2. Use this instruction to determine the numeric coordinates of P1 and P2 when they have been set manually, and to help compute the number of plotter units per user unit when scaling is on. This instruction can also be used with the input (IW) instruction to programmatically set the window to P1 and P2.
     '''
     return _cmd('OP;')
 
 def OW():
+    # See page 9-13
     '''OW, Output Window
-    Outputs the X,Y coordinates of the lower-left and upper-right corners of the window area in which plotting can occur. This instruction is especially useful when the window area (defined by IW) extends beyond the hard-clip limits;
+    USE: Outputs the X,Y coordinates of the lower-left and upper-right corners of the window area in which plotting can occur. This instruction is especially useful when the window area (defined by IW) extends beyond the hard-clip limits;
     '''
     return _cmd('OW;')
+
+def RO(n=None):
+    # See page 9-14
+    '''RO, Rotate Coordinate System
+    USE: Rotates the plotter's coordinate system 90 degrees about the plotter-unit coordinate origin. This instruction allow you to orient your plot vertically or horizontally.
+    '''
+    args = _check_args([
+        [],
+        ['n']
+    ], locals())
+    args = _join_args(args)
+    return _cmd(f'RO{args};')
 
 # Chapter 10: Advanced Pen Control and Front-Panel Interaction
 
