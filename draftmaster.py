@@ -92,7 +92,7 @@ def SP(pen_number=None):
     TODO
     '''
     if pen_number == None:
-        return _cmd(f'SP;')
+        return _cmd('SP;')
     else:
         return _cmd(f'SP{pen_number};')
 
@@ -112,6 +112,24 @@ def LB(string, terminator = chr(3)):
 # Chapter 8: Drawing Polygons and Using the Polygon Buffer
 
 # Chapter 9: Changing Picture Area and Orientation
+
+def OH():
+    '''OH, Output Hard-Clip Limits
+    Outputs the X,Y coordinates of the current hard-clip limits. Use this instruction to determine the plotter unit dimensions of the area in which plotting can occur.
+    '''
+    return _cmd('OH;')
+
+def OP():
+    '''OP, Output P1 and P2
+    Outputs the X,Y coordinates (in plotter units) of the current scaling points P1 and P2. Use this instruction to determine the numeric coordinates of P1 and P2 when they have been set manually, and to help compute the number of plotter units per user unit when scaling is on. This instruction can also be used with the input (IW) instruction to programmatically set the window to P1 and P2.
+    '''
+    return _cmd('OP;')
+
+def OW():
+    '''OW, Output Window
+    Outputs the X,Y coordinates of the lower-left and upper-right corners of the window area in which plotting can occur. This instruction is especially useful when the window area (defined by IW) extends beyond the hard-clip limits;
+    '''
+    return _cmd('OW;')
 
 # Chapter 10: Advanced Pen Control and Front-Panel Interaction
 
@@ -166,6 +184,14 @@ def NR():
     '''
     return _cmd('NR;')
 
+
+def OK():
+    # page 10-17
+    '''OK, Output Key
+    Outputs a number that indicates which, if any, of the front-panel function keys has been pressed. Use this instruction in conjunction with the WD instruction when designing interactive programs.
+    '''
+    return _cmd('OK;')
+
 def VS(pen_velocity = None, pen_number = None):
     '''VS, Velocity Select
     USE: Specifies pen speed. Use the instruction to optimize pen life and line quality for each pen and media combination. Create a slightly thicker line on any media by slowing the pen speed.
@@ -180,6 +206,13 @@ def VS(pen_velocity = None, pen_number = None):
 
 # Part III – Special Applications
 # Chapter 11: Digitizing
+
+def OD():
+    # page 11-8
+    '''OD, Output Digitized Point and Pen Status
+    Outputs the X,Y coordinates and up/down pen position associated with the last digitized point. Use this instruction  after the DP instruction to return the coordinates of the digitized point to your computer.
+    '''
+    return _cmd('OD;')
 
 # Chapter 12: Rollfeed Instructions and Long-Axis Printing
 
@@ -283,6 +316,71 @@ def OT():
     return _cmd('OT;')
 
 # Chapter 15: Device-Control Instructions
+
+def ESC_A():
+    # page 15-7
+    '''ESC.A, Output Identification
+    USE: Outputs the plotter's model number and firmware revision level.
+    '''
+    return _cmd('\x1b.A');
+
+def ESC_B():
+    # page 15-8
+    '''ESC.B, Output Buffer Space
+    USE: Outputs the plotter's currently available logical I/O buffer space.
+    '''
+    return _cmd('\x1b.B');
+
+def ESC_E():
+    # page 15-8
+    '''ESC.E, Output Extended Error
+    USE: Outputs the error number for any I/O error related to device-control instructions and clears the error message from the front-panel display. Use this instruction when debugging a program to determine which errors have occured (if any). Additionally, if you are using the RS-232-C interface, you can use ESC.E with ESC.@ to do block I/O error checking.
+    '''
+    return _cmd('\x1b.E');
+
+def ESC_J():
+    # page 15-11
+    '''ESC.J, Abort Device-Control
+    USE: Aborts any device-control instruction that may be partially decoded or executed. Use this instruction in an initialization sequence when you first access the plotter.
+    '''
+    return _cmd('\x1b.J');
+
+def ESC_K():
+    # page 15-12
+    '''ESC.K, Abort Graphics
+    Aborts any partially decoded HP-GL instruction and discards remaining instructions in the I/O, pen sort, bidirectional, and vector buffers. Use this instruction as part of an initialization sequence when starting a new program or to terminate plotting of HP-GL instructions in the buffer.
+    '''
+    return _cmd('\x1b.K');
+
+def ESC_L():
+    # page 15-13
+    '''ESC.L, Output Buffer Size When Empty
+    Outputs the size (in bytes) of the logical I/O buffer. The response is not transmitted by the plotter until the buffer is empty.
+    '''
+    return _cmd('\x1b.L');
+
+def ESC_O():
+    # page 15-14
+    '''ESC.O, Output Extended Status
+    Outputs the plotter's extended status. Use this instruction to obtain information about the current operating status of the plotter.
+    '''
+    return _cmd('\x1b.O');
+
+# def ESC_Q(): TODO
+
+def ESC_R():
+    # page 15-19
+    '''ESC.R, Reset
+    Resets certain I/O conditions to power-up default states. Use this instruction to establish known conditions when starting a new plot.
+    '''
+    return _cmd('\x1b.R');
+
+def ESC_S(n):
+    # page 15-20
+    '''ESC.S, Output Configurable Memory Size
+    Outputs the total memory size of user-definable RAM, or the memory space available in one of its five buffers: the physical I/O buffer, polygon buffer, downloadable character buffer, vector buffer, and pen sort buffer. Use this instruction to determine how much memory is currently allocated to each buffer or to confirm the allocation performed by GM, ESC.T, or ESC.R.
+    '''
+    return _cmd(f'\x1b.S{n}:');
 
 # Chapter 16: Interfacing and Handshaking
 
