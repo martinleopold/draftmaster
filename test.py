@@ -351,5 +351,32 @@ if __name__ == '__main__':
     assert PM(0) == 'PM0;'
     assertTypeError(lambda: PM(0,1))
     
+    # Chapter 9: Changing Picture Area and Orientation
+    
+    assert IW() == 'IW;'
+    assert iw() == 'IW;'
+    assert IW(0,1,2,3) == 'IW0,1,2,3;'
+    assertTypeError(lambda: IW(0))
+    assertTypeError(lambda: IW(0,1))
+    assertTypeError(lambda: IW(0,1,2))
+    assertTypeError(lambda: IW(0,1,2,3,4))
+    
+    assert OH() == 'OH;'
+    assert oh() == 'OH;'
+    assertTypeError(lambda: OH(0))
+    
+    assert OP() == 'OP;'
+    assert op() == 'OP;'
+    assertTypeError(lambda: OP(0))
+    
+    assert OW() == 'OW;'
+    assert ow() == 'OW;'
+    assertTypeError(lambda: OW(0))
+
+    assert RO() == 'RO;'
+    assert ro() == 'RO;'
+    assert RO(0) == 'RO0;'
+    assert RO(90) == 'RO90;'
+    assertTypeError(lambda: RO(0,1))
     
     
