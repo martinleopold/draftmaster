@@ -1,6 +1,6 @@
-from functools import partial
 import serial
 from draftmaster import *
+import draftmaster as dm
 
 ser = serial.Serial('/dev/tty.usbserial-A700CYY0', rtscts=True, dsrdtr=True)
 print(ser.name)

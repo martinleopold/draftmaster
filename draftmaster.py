@@ -1,3 +1,133 @@
+import serial as _serial
+
+_ser = None # Serial connection object
+_immediate = True # Immediately write commands to the serial port?
+_read_until = '\r' # Terminator sequence for reads
+_commands = [] # Command buffer
+
+def open(device_name, rtscts=True, dsrdtr=True, read_timeout=5, **kwargs):
+    '''Open serial port
+    device_name: Name of serial port/device
+    rtscts: Use RTS/CTS-type hardwire handshake? 
+    dsrdts: Use DSR/DTS-typ hardwire handshake?
+    read_timeout: Timeout for reads from the port
+    kwargs: Any remaining keyword args are passed to the serial.Serial constructor
+    '''
+    _ser = _serial.Serial(device_name, rtscts=rtscts, dsrdtr=dsrdtr, timeout=read_timeout, **kwargs)
+
+def set_write_immediate(on=True):
+    '''Immediately write commands to the serial port?'''
+    _immediate = on
+
+def set_write_buffered(on=True):
+    '''Buffer commands until write() is called? For convenience. Opposite effect as set_write_immediate()'''
+    _immediate = not on
+
+def set_read_terminator(read_until='\r'):
+    '''Set the sequence the serial device sends to indicate the end of its response.'''
+    _read_until = read_until
+
+def set_read_timeout(timeout=5):
+    '''Set the time (in seconds) to wait (i.e. block) on a read.
+    timeout = None: Wait forever
+    timeout = x: Set timeout to x seconds (float allowed) 
+    '''
+    if _ser == None: return
+    _ser.timeout = timeout
+
+def close():
+    '''Close the serial connection'''
+    if _ser == None: return
+    _ser.close()
+
+def _write(str):
+    '''Write a string to the serial port'''
+    if _ser == None: return
+    ser.write(str.encode('ASCII'))
+
+def write():
+    '''Write commands that have been buffered to the serial port. Applies only when using buffered mode i.e. set_write_buffered() has been called earlier. When using set_write_immediate() this function is called automatically after every command.'''
+    str = ''.join(_commands)
+    _commands.clear()
+    _write(str)
+    return str
+
+def _read():
+    '''Read a string from the serial port'''
+    if _ser == None: return
+    res = _ser.read_until( _read_until.encode('ASCII') )
+    res = res[:-len(_read_until)].decode('ASCII')
+    return res
+
+def _parse(str, fmt='s', sep=','):
+    '''Parse a string into a tuple using a seperator and a format string
+    str: The string to parse.
+    fmt: Format string consisting of letters s (string), n (number), f (float) and i (integer). The last letter is used repeatedly, if necessary. If an unknown letter is encountered, s is used instead.
+    sep: Seperator for splitting the string.
+    '''
+    fmt = fmt.lower()
+    if len(fmt) == 0: fmt = 's' # string
+    parts = str.split(sep)
+    parsed = []
+    for i, p in enumerate(parts):
+        type = fmt[i] if i < len(fmt) else fmt[-1]
+        if type == 'n': # number
+            n = float(p)
+            if n.is_integer(): n = int(n)
+            parsed.append( n )
+        elif type == 'f': # float
+            parsed.append( float(p) )
+        elif type == 'i': # integer
+            parsed.append( int(p) )
+        else:
+            parsed.append( p )
+    return tuple(parsed)
+
+
+def read(parse_fmt=None, parse_sep=None):
+    '''Read a response from the serial port and return it as string. When parse_fmt and optionally parse_sep are given, the response will be parsed into a tuple before returning it. See _parse() for how to use parse_fmt and parse_sep.'''
+    str = _read()
+    if parse_fmt != None:
+        if parse_sep == None: parse_sep = ','
+        return _parse(str, parse_fmt, parse_sep)
+    else:
+        return str
+
+def _cmd(str):
+    '''Do not call directly. Processes commands. Called by every individual command.'''
+    _commands.append(str) # add to command buffer
+    if _immediate: write()
+    return str
+
+def _check_args(forms, args):
+    '''Do not call directly. Check if args correspond to at least one of the allowed forms. If not, a value error is raised. Returns an enumeration of arg names and values of the first valid form that was found.
+    '''
+    arg_names = [ arg_name for arg_name in args if args[arg_name] != None] # List of argument names that were provided
+    for required_args in forms:
+        if set(arg_names) == set(required_args):
+            return [ (arg_name, args[arg_name]) for arg_name in arg_names ] # Return enumeration of arg name and arg value
+    raise TypeError(f'Argument error. Args given: {arg_names}. Allowed forms: {", ".join(map(str, forms))}')
+
+def _join_args(args, sep=','):
+    '''Do not call directly. Takes an enumeration of arg names and values and returns a string of joined arg values'''
+    def stringify(val): # support iterables (by joining them)
+        if '__iter__' in dir(val): return sep.join(map(str, val))
+        return str(val)
+    return sep.join( [stringify(arg_value) for _, arg_value in args] )
+
+def _add_lowercase():
+    '''Do not call directly. Make all those uppercase commands available as lowercase as well. Called at the end of this module.'''
+    from keyword import kwlist
+    g = globals()
+    cmds = list( filter(lambda g: len(g) == 2 and g.isupper(), g) )
+    for cmd in cmds:
+        cmd_new = cmd.lower()
+        g[cmd_new] = g[cmd]
+        # add trailing _ if the new command name is a reserved word (e.g. in, if, is, or)
+        if cmd_new in kwlist: g[cmd_new + '_'] = g[cmd]
+
+
+
 # HP GL Instructions (Graphics instructions, output instructions)
 # Device Control Instructions
 
@@ -10,37 +140,6 @@
 
 # Units:
 # Plotter Units: 1 pu = 0.025mm or 0.00098 in
-
-def _cmd(str):
-    return str
-
-def _check_args(forms, args):
-    '''Check if args correspond to at least one of the allowed forms. If not, a value error is raised.
-    Returns an enumeration of arg names and values of the first valid form that was found.
-    '''
-    arg_names = [ arg_name for arg_name in args if args[arg_name] != None] # List of argument names that were provided
-    for required_args in forms:
-        if set(arg_names) == set(required_args):
-            return [ (arg_name, args[arg_name]) for arg_name in arg_names ] # Return enumeration of arg name and arg value
-    raise TypeError(f'Argument error. Args given: {arg_names}. Allowed forms: {", ".join(map(str, forms))}')
-
-def _join_args(args, sep=','):
-    '''Takes an enumeration of arg names and values and returns a string of joined arg values'''
-    def stringify(val): # support iterables (by joining them)
-        if '__iter__' in dir(val): return sep.join(map(str, val))
-        return str(val)
-    return sep.join( [stringify(arg_value) for _, arg_value in args] )
-
-# Make all those uppercase commands available as lowercase as well
-def _add_lowercase():
-    from keyword import kwlist
-    g = globals()
-    cmds = list( filter(lambda g: len(g) == 2 and g.isupper(), g) )
-    for cmd in cmds:
-        cmd_new = cmd.lower()
-        g[cmd_new] = g[cmd]
-        # add trailing _ if the new command name is a reserved word (e.g. in, if, is, or)
-        if cmd_new in kwlist: g[cmd_new + '_'] = g[cmd]
 
 
 
