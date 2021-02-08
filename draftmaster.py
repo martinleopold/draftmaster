@@ -4,6 +4,7 @@ _ser = None # Serial connection object
 _immediate = True # Immediately write commands to the serial port?
 _read_until = '\r' # Terminator sequence for reads
 _commands = [] # Command buffer
+_fmt_stack = [] # Saves format for commands that produce output. Popped on read
 
 def open(device_name, rtscts=True, dsrdtr=True, read_timeout=5, **kwargs):
     '''Open serial port
@@ -83,15 +84,19 @@ def _parse(str, fmt='s', sep=','):
             parsed.append( p )
     return tuple(parsed)
 
+def read_raw():
+    '''Read a response from the serial port and return the raw string'''
+    _fmt_stack.pop()
+    return _read()
 
 def read(parse_fmt=None, parse_sep=None):
-    '''Read a response from the serial port and return it as string. When parse_fmt and optionally parse_sep are given, the response will be parsed into a tuple before returning it. See _parse() for how to use parse_fmt and parse_sep.'''
+    '''Read a response from the serial port. The response will be parsed into a tuple before it is returned. To override parsing, you can use parse_fmt and optionally parse_sep. See _parse() for how to use parse_fmt and parse_sep.'''
     str = _read()
-    if parse_fmt != None:
-        if parse_sep == None: parse_sep = ','
-        return _parse(str, parse_fmt, parse_sep)
-    else:
-        return str
+    fmt = _fmt_stack.pop()
+    if parse_fmt == None and fmt:
+        return _parse(str, fmt, ',')
+    if parse_sep == None: parse_sep = ','
+    return _parse(str, parse_fmt, parse_sep)
 
 def _cmd(str):
     '''Do not call directly. Processes commands. Called by every individual command.'''
@@ -706,21 +711,27 @@ def OH():
     # See page 9-11
     '''OH, Output Hard-Clip Limits
     USE: Outputs the X,Y coordinates of the current hard-clip limits. Use this instruction to determine the plotter unit dimensions of the area in which plotting can occur.
+    RESPONSE: X_LL, Y_LL, X_UR, Y_UR
     '''
+    _fmt_stack.append('nnnn')
     return _cmd('OH;')
 
 def OP():
     # See page 9-12
     '''OP, Output P1 and P2
     USE: Outputs the X,Y coordinates (in plotter units) of the current scaling points P1 and P2. Use this instruction to determine the numeric coordinates of P1 and P2 when they have been set manually, and to help compute the number of plotter units per user unit when scaling is on. This instruction can also be used with the input (IW) instruction to programmatically set the window to P1 and P2.
+    RESPONSE: P1_X, P1_Y, P2_X, P2_Y
     '''
+    _fmt_stack.append('nnnn')
     return _cmd('OP;')
 
 def OW():
     # See page 9-13
     '''OW, Output Window
-    USE: Outputs the X,Y coordinates of the lower-left and upper-right corners of the window area in which plotting can occur. This instruction is especially useful when the window area (defined by IW) extends beyond the hard-clip limits;
+    USE: Outputs the X,Y coordinates of the lower-left and upper-right corners of the window area in which plotting can occur. This instruction is especially useful when the window area (defined by IW) extends beyond the hard-clip limits.
+    RESPONSE: X_LL, Y_LL, X_UR, Y_UR
     '''
+    _fmt_stack.append('nnnn')
     return _cmd('OW;')
 
 def RO(n=None):
@@ -827,8 +838,10 @@ def NR():
 def OK():
     # See page 10-17
     '''OK, Output Key
-    Outputs a number that indicates which, if any, of the front-panel function keys has been pressed. Use this instruction in conjunction with the WD instruction when designing interactive programs.
+    USE: Outputs a number that indicates which, if any, of the front-panel function keys has been pressed. Use this instruction in conjunction with the WD instruction when designing interactive programs.
+    RESPONSE: key pressed (0..4)
     '''
+    _fmt_stack.append('n')
     return _cmd('OK;')
 
 def SG(pen_number=None):
@@ -894,7 +907,9 @@ def OD():
     # See page 11-8
     '''OD, Output Digitized Point and Pen Status
     USE: Outputs the X,Y coordinates and up/down pen position associated with the last digitized point. Use this instruction  after the DP instruction to return the coordinates of the digitized point to your computer.
+    RESPONSE: X,Y,Pen Status (0..up, 1..down)
     '''
+    _fmt_stack.append('nnn')
     return _cmd('OD;')
 
 # Chapter 12: Rollfeed Instructions and Long-Axis Printing
@@ -1108,70 +1123,90 @@ def OA():
     # See page 14-13
     '''OA, Output Actual Pen Status
     USE: Outputs the current pen location (in plotter units) and up/down position. You can use this information to position a label of figure, to determine the parameters of some desired window, or to determine the pen's current location if it has been moved using front-panel Cursor Control buttons.
+    RESPONSE: X,Y,Pen Status (0..up, 1..down)
     '''
+    _fmt_stack.append('nnn')
     return _cmd('OA;')
 
 def OC():
     # See page 14-14
     '''OC, Output Commanded Pen Status
-    USE: Outputs the location and up/down position of the last commanded move. Use this instruction to position a label or determine the parameters of an instruction that tried to move the pen beyond the limits of some window. You can also use this instruction when you want to know the pen's location in user units. 
+    USE: Outputs the location and up/down position of the last commanded move. Use this instruction to position a label or determine the parameters of an instruction that tried to move the pen beyond the limits of some window. You can also use this instruction when you want to know the pen's location in user units.
+    RESPONSE: X,Y,Pen Status (0..up, 1..down)
     '''
+    _fmt_stack.append('nnn')
     return _cmd('OC;')
 
 def OE():
     # See page 14-15
     '''OE, Output Error
     USE: Outputs a number corresponding to the type of HP-GL error (if any) received by the plotter after the most recent IN instruction, front-panel reset, or OE instruction. Use this instruction for debugging programs.
+    RESPONSE: error number (0..7)
     '''
+    _fmt_stack.append('n')
     return _cmd('OE;')
 
 def OF():
     # See page 14-17
     '''OF, Output Factors
     USE: Outputs the number of plotter units per millimetre in each axis. This instruction lets you use the plotter with software that needs to know the size of a plotter unit.
+    RESPONSE: 40,40
     '''
+    _fmt_stack.append('nn')
     return _cmd('OF;')
 
 def OG():
     # See page 14-18
     '''OG, Output Group Count
     USE: Outputs the data block number of the current group count and whether the escape function has been activated. Use this instruction at the end of a data block in spooling applications, where it is important to know the current data block number and whether the data block has been transferred.
+    RESPONSE: count number, escape status
     '''
+    _fmt_stack.append('nn')
     return _cmd('OG;')
 
 def OI():
     # See page 14-19
     '''OI, Output Identification
-    Outputs the plotter's identifying model number. This information is useful in a remote operating configuration (where several plotters are connected to the computer) to determine which plotter model is on-line, or when software needs the plotter's model number.
+    USE: Outputs the plotter's identifying model number. This information is useful in a remote operating configuration (where several plotters are connected to the computer) to determine which plotter model is on-line, or when software needs the plotter's model number.
+    RESPONSE: 7595A or 7596A (If Emulate is ON, the response will be 7585B or 7586B)
     '''
+    _fmt_stack.append('s')
     return _cmd('OI;')
 
 def OL():
     # See page 14-20
     '''OL, Output Label Length
-    Output information about the label contained in the label buffer.
+    USE: Output information about the label contained in the label buffer.
+    RESPONSE: length, characters, line feeds
     '''
+    _fmt_stack.append('nnn')
     return _cmd('OL;')
 
 def OO():
     # See page 14-22
     '''OO, Output Options
-    Outputs eight option parameters indicating features implemented on the plotter. Some software packages use this feature to determine which plotter capabilities exist.
+    USE: Outputs eight option parameters indicating features implemented on the plotter. Some software packages use this feature to determine which plotter capabilities exist.
+    RESPONSE: C,1,0,0,1,1,0,1 (C indicates status of plotter paper check bit: 0..Sheet media is loaded and unmarke; 1..Roll media is loaded and unmarked; 2..Sheet media is loaded and plotted on; 3..Roll media is loaded and plotted on)
     '''
+    _fmt_stack.append('nnnnnnnn')
     return _cmd('OO;')
 
 def OS():
     # See page 14-23
     '''OS, Output Status
-    Outputs the decimal value of the status byte. Use this instruction in debugging operations and in digitizing applications.
+    USE: Outputs the decimal value of the status byte. Use this instruction in debugging operations and in digitizing applications.
+    RESPONSE: status number
     '''
+    _fmt_stack.append('n')
     return _cmd('OS;')
 
 def OT():
     # See page 14-25
     '''OT, Output Carousel Type
-    The OT instruction outputs information on the type of carousel loaded and the stalls occupied.
+    USE: The OT instruction outputs information on the type of carousel loaded and the stalls occupied.
+    RESPONSE: type, map
     '''
+    _fmt_stack.append('nn')
     return _cmd('OT;')
 
 # Chapter 15: Device-Control Instructions
@@ -1180,50 +1215,60 @@ def ESC_A():
     # See page 15-7
     '''ESC.A, Output Identification
     USE: Outputs the plotter's model number and firmware revision level.
+    RESPONSE: model number, firmware revision level
     '''
-    return _cmd('\x1b.A');
+    _fmt_stack.append('sn')
+    return _cmd('\x1b.A')
 
 def ESC_B():
     # See page 15-8
     '''ESC.B, Output Buffer Space
     USE: Outputs the plotter's currently available logical I/O buffer space.
+    RESPONSE: available logical I/O buffer space
     '''
-    return _cmd('\x1b.B');
+    _fmt_stack.append('n')
+    return _cmd('\x1b.B')
 
 def ESC_E():
     # See page 15-8
     '''ESC.E, Output Extended Error
     USE: Outputs the error number for any I/O error related to device-control instructions and clears the error message from the front-panel display. Use this instruction when debugging a program to determine which errors have occured (if any). Additionally, if you are using the RS-232-C interface, you can use ESC.E with ESC.@ to do block I/O error checking.
+    RESPONSE: error number
     '''
-    return _cmd('\x1b.E');
+    _fmt_stack.append('n')
+    return _cmd('\x1b.E')
 
 def ESC_J():
     # See page 15-11
     '''ESC.J, Abort Device-Control
     USE: Aborts any device-control instruction that may be partially decoded or executed. Use this instruction in an initialization sequence when you first access the plotter.
     '''
-    return _cmd('\x1b.J');
+    return _cmd('\x1b.J')
 
 def ESC_K():
     # See page 15-12
     '''ESC.K, Abort Graphics
     USE: Aborts any partially decoded HP-GL instruction and discards remaining instructions in the I/O, pen sort, bidirectional, and vector buffers. Use this instruction as part of an initialization sequence when starting a new program or to terminate plotting of HP-GL instructions in the buffer.
     '''
-    return _cmd('\x1b.K');
+    return _cmd('\x1b.K')
 
 def ESC_L():
     # See page 15-13
     '''ESC.L, Output Buffer Size When Empty
     USE: Outputs the size (in bytes) of the logical I/O buffer. The response is not transmitted by the plotter until the buffer is empty.
+    RESPONSE: available logical I/O buffer space
     '''
-    return _cmd('\x1b.L');
+    _fmt_stack.append('n')
+    return _cmd('\x1b.L')
 
 def ESC_O():
     # See page 15-14
     '''ESC.O, Output Extended Status
     USE: Outputs the plotter's extended status. Use this instruction to obtain information about the current operating status of the plotter.
+    RESPONSE: operating status
     '''
-    return _cmd('\x1b.O');
+    _fmt_stack.append('n')
+    return _cmd('\x1b.O')
 
 def ESC_Q(n=None):
     # See page 15-17
@@ -1235,21 +1280,23 @@ def ESC_Q(n=None):
         ['n']
     ], locals())
     args = _join_args(args, sep=';')
-    return _cmd(f'\x1b.Q{args}:');
+    return _cmd(f'\x1b.Q{args}:')
 
 def ESC_R():
     # See page 15-19
     '''ESC.R, Reset
     USE: Resets certain I/O conditions to power-up default states. Use this instruction to establish known conditions when starting a new plot.
     '''
-    return _cmd('\x1b.R');
+    return _cmd('\x1b.R')
 
 def ESC_S(n):
     # See page 15-20
     '''ESC.S, Output Configurable Memory Size
     USE: Outputs the total memory size of user-definable RAM, or the memory space available in one of its five buffers: the physical I/O buffer, polygon buffer, downloadable character buffer, vector buffer, and pen sort buffer. Use this instruction to determine how much memory is currently allocated to each buffer or to confirm the allocation performed by GM, ESC.T, or ESC.R.
+    RESPONSE: memory size
     '''
-    return _cmd(f'\x1b.S{n}:');
+    _fmt_stack.append('n')
+    return _cmd(f'\x1b.S{n}:')
 
 def ESC_T(physical_io_buffer='', polygon_buffer='', downloadable_character_buffer='', vector_buffer='', pen_sort_buffer=''):
     # See page 15-21
@@ -1266,21 +1313,21 @@ def ESC_U():
     '''ESC.U, End Flush Mode
     USE: Ends flush mode. Use this instruction in spooling applications to end flush mode, thus allowing the plotter to begin parsing graphics instructions again.
     '''
-    return _cmd('\x1b.U');
+    return _cmd('\x1b.U')
 
 def ESC_Y():
     # See page 15-25
     '''ESC.Y or ESC.(, Plotter On
     USE: Enables the plotter to accept data and interpret it as graphics or device-control instructions. Use this instruction in Eavesdrop (RS-232-C interface only) to establish programmed-on operation.
     '''
-    return _cmd('\x1b.Y');
+    return _cmd('\x1b.Y')
 
 def ESC_Z():
     # See page 15-25
     '''ESC.Z or ESC.), Plotter Off
     USE: Disables the plotter so that it accepts only a plotter-on instruction. Use this instruction in Eavesdrop (RS-232-C interface only) to establish programmed-off operation.
     '''
-    return _cmd('\x1b.Z');
+    return _cmd('\x1b.Z')
 
 def ESC_AT(logical_io_buffer_size='', io_conditions=''):
     # See page 15-26
@@ -1291,7 +1338,7 @@ def ESC_AT(logical_io_buffer_size='', io_conditions=''):
         ['logical_io_buffer_size', 'io_conditions']
     ], locals())
     args = _join_args(args, sep=';')
-    return _cmd(f'\x1b.@{args}:');
+    return _cmd(f'\x1b.@{args}:')
 
 # Chapter 16: Interfacing and Handshaking
 
@@ -1310,7 +1357,7 @@ def ESC_H(data_block_size=None, enquiry_character=None, acknowledgement_string=N
         ['data_block_size', 'enquiry_character', 'acknowledgement_string']
     ], locals())
     args = _join_args(args, sep=';')
-    return _cmd(f'\x1b.H{args}:');
+    return _cmd(f'\x1b.H{args}:')
 
 def ESC_I(xoff_threshold_level_or_data_block_size='', omitted_or_enquiry_character='', xon_trigger_characters_or_acknowledgement_string=''):
     # See page 16-23
@@ -1321,7 +1368,7 @@ def ESC_I(xoff_threshold_level_or_data_block_size='', omitted_or_enquiry_charact
         ['xoff_threshold_level_or_data_block_size', 'omitted_or_enquiry_character', 'xon_trigger_characters_or_acknowledgement_string']
     ], locals())
     args = _join_args(args, sep=';')
-    return _cmd(f'\x1b.I{args}:');
+    return _cmd(f'\x1b.I{args}:')
 
 def ESC_M(turnaround_delay='', output_trigger='', echo_terminator='', output_terminator='', output_initiator=''):
     # See page 16-25
@@ -1332,7 +1379,7 @@ def ESC_M(turnaround_delay='', output_trigger='', echo_terminator='', output_ter
         ['turnaround_delay', 'output_trigger', 'echo_terminator', 'output_terminator', 'output_initiator'],
     ], locals())
     args = _join_args(args, sep=';')
-    return _cmd(f'\x1b.M{args}:');
+    return _cmd(f'\x1b.M{args}:')
 
 def ESC_N(intercharacter_delay='', handshake_dependent_parameter=''):
     # See page 16-28
@@ -1343,7 +1390,7 @@ def ESC_N(intercharacter_delay='', handshake_dependent_parameter=''):
         ['intercharacter_delay', 'handshake_dependent_parameter']
     ], locals())
     args = _join_args(args, sep=';')
-    return _cmd(f'\x1b.N{args}:');
+    return _cmd(f'\x1b.N{args}:')
 
 def ESC_P(handshake=''):
     # See page 16-29
@@ -1354,7 +1401,7 @@ def ESC_P(handshake=''):
         ['handshake']
     ], locals())
     args = _join_args(args, sep=';')
-    return _cmd(f'\x1b.P{args}:');
+    return _cmd(f'\x1b.P{args}:')
 
 
 
