@@ -1201,65 +1201,57 @@ def ESC_H(data_block_size=None, enquiry_character=None, acknowledgement_string=N
     '''ESC.H, Set Handshake Mode 1
     USE: Configures the plotter for enquire/acknowledge handshake when the computer requires the parameters of ESC.M and ESC.N be used during the handshaking sequence.
     '''
+    # if at least one parameter is given, all of them must be specified (if as empty) so they show up as semicolons in the output
+    if (data_block_size != None or enquiry_character != None or acknowledgement_string != None):
+        if data_block_size == None: data_block_size = ''
+        if enquiry_character == None: enquiry_character = ''
+        if acknowledgement_string == None: acknowledgement_string = ''
     args = _check_args([
         [],
-        ['data_block_size'],
-        ['data_block_size', 'enquiry_character'],
         ['data_block_size', 'enquiry_character', 'acknowledgement_string']
     ], locals())
     args = _join_args(args, sep=';')
     return _cmd(f'\x1b.H{args}:');
 
-def ESC_I(xoff_threshold_level_or_data_block_size=None, omitted_or_enquiry_character=None, xon_trigger_characters_or_acknowledgement_string=None):
+def ESC_I(xoff_threshold_level_or_data_block_size='', omitted_or_enquiry_character='', xon_trigger_characters_or_acknowledgement_string=''):
     # See page 16-23
     '''ESC.I, Set Handshake Mode 2
     USE: Configures the plotter for either Xon-Xoff or enquire/acknowledge handshakes when the computer does not expect the parameters of the ESC.M and ESC.N instructions to be used during the handshaking sequence. This is often true when the handshake protocol is part of the computer's operating system.
     '''
     args = _check_args([
-        [],
-        ['xoff_threshold_level_or_data_block_size'],
-        ['xoff_threshold_level_or_data_block_size', 'omitted_or_enquiry_character'],
         ['xoff_threshold_level_or_data_block_size', 'omitted_or_enquiry_character', 'xon_trigger_characters_or_acknowledgement_string']
     ], locals())
     args = _join_args(args, sep=';')
     return _cmd(f'\x1b.I{args}:');
 
-def ESC_M(turnaround_delay=None, output_trigger=None, echo_terminator=None, output_terminator=None, output_initiator=None):
+def ESC_M(turnaround_delay='', output_trigger='', echo_terminator='', output_terminator='', output_initiator=''):
     # See page 16-25
     '''ESC.M, Set Output Mode
     USE: Establishes parameters for the plotter's communication format. Use the instruction to establish a turnaround delay, an output trigger character, an echo terminator, and an output initiator character. Also use it to change the output terminator from its default value, ASCII decimal code 13 (carriage return).
     '''
     args = _check_args([
-        [],
-        ['turnaround_delay'],
-        ['turnaround_delay', 'output_trigger'],
-        ['turnaround_delay', 'output_trigger', 'echo_terminator'],
-        ['turnaround_delay', 'output_trigger', 'echo_terminator', 'output_terminator'],
         ['turnaround_delay', 'output_trigger', 'echo_terminator', 'output_terminator', 'output_initiator'],
     ], locals())
     args = _join_args(args, sep=';')
     return _cmd(f'\x1b.M{args}:');
 
-def ESC_N(intercharacter_delay=None, handshake_dependent_parameter=None):
+def ESC_N(intercharacter_delay='', handshake_dependent_parameter=''):
     # See page 16-28
     '''ESC.N, Set Extended Output and Handshake Mode
     USE: Establishes parameters for the plotter's communication format. Use the instruction to specify an intercharacter delay in all handshake modes and either the immediate response string for the enquire/acknowledge handshake or the Xoff trigger character(s) for the Xon-Xoff handshake.
     '''
     args = _check_args([
-        [],
-        ['intercharacter_delay'],
         ['intercharacter_delay', 'handshake_dependent_parameter']
     ], locals())
     args = _join_args(args, sep=';')
     return _cmd(f'\x1b.N{args}:');
 
-def ESC_P(handshake=None):
+def ESC_P(handshake=''):
     # See page 16-29
     '''ESC.P, Set Handshake Mode
     USE: Set one of the three standard handshakes.
     '''
     args = _check_args([
-        [],
         ['handshake']
     ], locals())
     args = _join_args(args, sep=';')

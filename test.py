@@ -678,3 +678,47 @@ if __name__ == '__main__':
     assert ESC_AT(io_conditions=1) == f'{_esc}.@;1:'
     assertTypeError(lambda: ESC_AT(1,2,3))
     
+    # Chapter 15: Device-Control Instructions
+    
+    assert ESC_H() == f'{_esc}.H:'
+    assert ESC_H(1) == f'{_esc}.H1;;:'
+    assert ESC_H(1,2) == f'{_esc}.H1;2;:'
+    assert ESC_H(1,2,3) == f'{_esc}.H1;2;3:'
+    assert ESC_H(data_block_size=1) == f'{_esc}.H1;;:'
+    assert ESC_H(enquiry_character=1) == f'{_esc}.H;1;:'
+    assert ESC_H(acknowledgement_string=1) == f'{_esc}.H;;1:'
+    assertTypeError(lambda: ESC_H(1,2,3,4))
+    
+    assert ESC_I() == f'{_esc}.I;;:'
+    assert ESC_I(1) == f'{_esc}.I1;;:'
+    assert ESC_I(1,2) == f'{_esc}.I1;2;:'
+    assert ESC_I(1,2,3) == f'{_esc}.I1;2;3:'
+    assert ESC_I(xoff_threshold_level_or_data_block_size=1) == f'{_esc}.I1;;:'
+    assert ESC_I(omitted_or_enquiry_character=1) == f'{_esc}.I;1;:'
+    assert ESC_I(xon_trigger_characters_or_acknowledgement_string=1) == f'{_esc}.I;;1:'
+    assertTypeError(lambda: ESC_I(1,2,3,4))
+    
+    assert ESC_M() == f'{_esc}.M;;;;:'
+    assert ESC_M(1) == f'{_esc}.M1;;;;:'
+    assert ESC_M(1,2) == f'{_esc}.M1;2;;;:'
+    assert ESC_M(1,2,3) == f'{_esc}.M1;2;3;;:'
+    assert ESC_M(1,2,3,4) == f'{_esc}.M1;2;3;4;:'
+    assert ESC_M(turnaround_delay=1) == f'{_esc}.M1;;;;:'
+    assert ESC_M(output_trigger=1) == f'{_esc}.M;1;;;:'
+    assert ESC_M(echo_terminator=1) == f'{_esc}.M;;1;;:'
+    assert ESC_M(output_terminator=1) == f'{_esc}.M;;;1;:'
+    assert ESC_M(output_initiator=1) == f'{_esc}.M;;;;1:'
+    assert ESC_M(1,2,3,4,5) == f'{_esc}.M1;2;3;4;5:'
+    assertTypeError(lambda: ESC_M(1,2,3,4,5,6))
+    
+    assert ESC_N() == f'{_esc}.N;:'
+    assert ESC_N(1) == f'{_esc}.N1;:'
+    assert ESC_N(1,2) == f'{_esc}.N1;2:'
+    assert ESC_N(intercharacter_delay=1) == f'{_esc}.N1;:'
+    assert ESC_N(handshake_dependent_parameter=1) == f'{_esc}.N;1:'
+    assertTypeError(lambda: ESC_N(1,2,3))
+    
+    assert ESC_P() == f'{_esc}.P:'
+    assert ESC_P(1) == f'{_esc}.P1:'
+    assertTypeError(lambda: ESC_P(1,2))
+    
