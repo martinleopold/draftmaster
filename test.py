@@ -556,3 +556,58 @@ if __name__ == '__main__':
     assert UC(0,1,2,3,4) == 'UC0,1,2,3,4;'
     assert UC(0,-1,2,3,-1,4,5,6,7) == 'UC0,-1,2,3,-1,4,5,6,7;'
     
+    # Part IV – Interfacing, Handshaking, Output, and Device Control
+    # Chapter 14: Obtaining Information from the Plotter
+    
+    assert GC() == 'GC;'
+    assert gc() == 'GC;'
+    assert GC(0) == 'GC0;'
+    assertTypeError(lambda: GC(0,1))
+    
+    assert IM() == 'IM;'
+    assert im() == 'IM;'
+    assert IM(0) == 'IM0;'
+    assert IM(0,1) == 'IM0,1;'
+    assert IM(0,1,2) == 'IM0,1,2;'
+    assertTypeError(lambda: IM(0,1,2,3))
+    
+    assert OA() == 'OA;'
+    assert oa() == 'OA;'
+    assertTypeError(lambda: OA(0))
+    
+    assert OC() == 'OC;'
+    assert oc() == 'OC;'
+    assertTypeError(lambda: OC(0))
+    
+    assert OE() == 'OE;'
+    assert oe() == 'OE;'
+    assertTypeError(lambda: OE(0))
+    
+    assert OF() == 'OF;'
+    assert of() == 'OF;'
+    assertTypeError(lambda: OF(0))
+    
+    assert OG() == 'OG;'
+    assert og() == 'OG;'
+    assertTypeError(lambda: OG(0))
+    
+    assert OI() == 'OI;'
+    assert oi() == 'OI;'
+    assertTypeError(lambda: OI(0))
+    
+    assert OL() == 'OL;'
+    assert ol() == 'OL;'
+    assertTypeError(lambda: OL(0))
+    
+    assert OO() == 'OO;'
+    assert oo() == 'OO;'
+    assertTypeError(lambda: OO(0))
+    
+    assert OS() == 'OS;'
+    assert os() == 'OS;'
+    assertTypeError(lambda: OS(0))
+    
+    assert OT() == 'OT;'
+    assert ot() == 'OT;'
+    assertTypeError(lambda: OT(0))
+    

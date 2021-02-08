@@ -991,12 +991,13 @@ def GC(count_number=None):
     args = _join_args(args)
     return _cmd(f'GC{args};')
 
-def IM(e_mask_value, s_mask_value=None, p_mask_value=None):
+def IM(e_mask_value=None, s_mask_value=None, p_mask_value=None):
     # See page 14-10
     '''IM, Input Mask
     USE: Controls which HP-GL errors are reported. If you are using an HP-IB interface, you can also use IM to control the conditions that cause an HP-IB service reques or a positive response to a parallel poll.
     '''
     args = _check_args([
+        [],
         ['e_mask_value'],
         ['e_mask_value', 's_mask_value'],
         ['e_mask_value', 's_mask_value', 'p_mask_value'],
