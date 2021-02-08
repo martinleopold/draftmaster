@@ -766,7 +766,12 @@ def WD(cc=None, terminator='\x03'):
         ['terminator'],
         ['cc', 'terminator']
     ], locals())
-    args = _join_args(args)
+    args = _join_args(args, sep='')
+    if len(args) > 32 + len(terminator):
+        raise ValueError('cc can only be up to 32 characters')
+    for c in args[:-len(terminator)]:
+        if c in [chr(0), chr(3), chr(5), chr(27), chr(127)]:
+            raise ValueError('cc cannot contain NULL, ETX, ENQ, ESC and DEL')
     return _cmd(f'WD{args}') # Note this command doesn't end with ';'
 
 # Part III – Special Applications

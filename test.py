@@ -379,4 +379,74 @@ if __name__ == '__main__':
     assert RO(90) == 'RO90;'
     assertTypeError(lambda: RO(0,1))
     
+    # Chapter 10: Advanced Pen Control and Front-Panel Interaction
+    
+    assert AP() == 'AP;'
+    assert ap() == 'AP;'
+    assert AP(0) == 'AP0;'
+    assertTypeError(lambda: AP(0,1))
+
+    assert AS() == 'AS;'
+    assert as_() == 'AS;'
+    assert AS(0) == 'AS0;'
+    assert AS(0,1) == 'AS0,1;'
+    assertTypeError(lambda: AS(0,1,2))
+    
+    assert CV() == 'CV;'
+    assert cv() == 'CV;'
+    assert CV(0) == 'CV0;'
+    assert CV(0,1) == 'CV0,1;'
+    assertTypeError(lambda: CV(0,1,2))
+    
+    assert FS() == 'FS;'
+    assert fs() == 'FS;'
+    assert FS(0) == 'FS0;'
+    assert FS(0,1) == 'FS0,1;'
+    assertTypeError(lambda: FS(0,1,2))
+    
+    assert GP() == 'GP;'
+    assert gp() == 'GP;'
+    assert GP(0) == 'GP0;'
+    assert GP(0,1) == 'GP0,1;'
+    assert GP(0,1,2) == 'GP0,1,2;'
+    assert GP(0,1,2,3) == 'GP0,1,2,3;'
+    assertTypeError(lambda: GP(0,1,2,3,4))
+
+    assert KY() == 'KY;'
+    assert ky() == 'KY;'
+    assert KY(0) == 'KY0;'
+    assert KY(0,1) == 'KY0,1;'
+    assertTypeError(lambda: KY(0,1,2))
+    
+    assert NR() == 'NR;'
+    assert nr() == 'NR;'
+    assertTypeError(lambda: NR(0))
+    
+    assert OK() == 'OK;'
+    assert ok() == 'OK;'
+    assertTypeError(lambda: OK(0))
+
+    assert SG() == 'SG;'
+    assert sg() == 'SG;'
+    assert SG(0) == 'SG0;'
+    assertTypeError(lambda: SG(0,1))
+    
+    assert VS() == 'VS;'
+    assert vs() == 'VS;'
+    assert VS(0) == 'VS0;'
+    assert VS(0,1) == 'VS0,1;'
+    assertTypeError(lambda: VS(0,1,2))
+    
+    assert WD() == 'WD\x03'
+    assert wd() == 'WD\x03'
+    assert WD('') == 'WD\x03'
+    assert WD('abc') == 'WDabc\x03'
+    assert WD('abc', '#') == 'WDabc#'
+    assertTypeError(lambda: WD(0,1,2))
+    assertValueError(lambda: WD('012345678901234567890123456789012'))
+    assertValueError(lambda: WD(chr(0)))
+    assertValueError(lambda: WD(chr(3)))
+    assertValueError(lambda: WD(chr(5)))
+    assertValueError(lambda: WD(chr(27)))
+    assertValueError(lambda: WD(chr(127)))
     
