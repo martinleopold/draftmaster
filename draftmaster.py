@@ -571,8 +571,8 @@ def GM(polygon_buffer=None, downloadable_character_buffer=None, reserved_buffer=
         ['polygon_buffer'],
         ['polygon_buffer', 'downloadable_character_buffer'],
         ['polygon_buffer', 'downloadable_character_buffer', 'reserved_buffer'],
-        ['polygon_buffer', 'downloadable_character_buffer', 'reserved_buffer' 'vector_buffer'],
-        ['polygon_buffer', 'downloadable_character_buffer', 'reserved_buffer' 'vector_buffer', 'pen_sort_buffer'],
+        ['polygon_buffer', 'downloadable_character_buffer', 'reserved_buffer', 'vector_buffer'],
+        ['polygon_buffer', 'downloadable_character_buffer', 'reserved_buffer', 'vector_buffer', 'pen_sort_buffer'],
     ], locals())
     args = _join_args(args)
     return _cmd(f'GM{args};')

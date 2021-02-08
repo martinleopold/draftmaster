@@ -325,3 +325,31 @@ if __name__ == '__main__':
     assertTypeError(lambda: SR(0))
     assertTypeError(lambda: SR(0,1,2))
     
+    # Chapter 8: Drawing Polygons and Using the Polygon Buffer
+    
+    assert EP() == 'EP;'
+    assert ep() == 'EP;'
+    assertTypeError(lambda: EP(0))
+    assertTypeError(lambda: EP(0,1))
+    
+    assert FP() == 'FP;'
+    assert fp() == 'FP;'
+    assertTypeError(lambda: FP(0))
+    assertTypeError(lambda: FP(0,1))
+    
+    assert GM() == 'GM;'
+    assert gm() == 'GM;'
+    assert GM(0) == 'GM0;'
+    assert GM(0,1) == 'GM0,1;'
+    assert GM(0,1,2) == 'GM0,1,2;'
+    assert GM(0,1,2,3) == 'GM0,1,2,3;'
+    assert GM(0,1,2,3,4) == 'GM0,1,2,3,4;'
+    assertTypeError(lambda: GM(0,1,2,3,4,5))
+    
+    assert PM() == 'PM;'
+    assert pm() == 'PM;'
+    assert PM(0) == 'PM0;'
+    assertTypeError(lambda: PM(0,1))
+    
+    
+    
