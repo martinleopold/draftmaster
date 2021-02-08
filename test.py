@@ -6,6 +6,9 @@ def assertRaises(error, fn):
         return
     raise AssertionError(f'Should have raised {error.__name__}')
 
+def assertTypeError(fn):
+    return assertRaises(TypeError, fn)
+
 if __name__ == '__main__':
     from draftmaster import *
     
@@ -13,45 +16,45 @@ if __name__ == '__main__':
     
     assert DF() == 'DF;'
     assert df() == 'DF;'
-    assertRaises(TypeError, lambda: DF(0))
+    assertTypeError(lambda: DF(0))
     
     assert IN() == 'IN;'
     assert in_() == 'IN;'
     assert IN(partial=True) == 'IN-1;'
-    assertRaises(TypeError, lambda: IN(False, 0))
+    assertTypeError(lambda: IN(False, 0))
     
     assert IP() == 'IP;'
     assert ip() == 'IP;'
     assert IP(0,1) == 'IP0,1;'
     assert IP(0,1,2,3) == 'IP0,1,2,3;'
-    assertRaises(TypeError, lambda: IP(0))
-    assertRaises(TypeError, lambda: IP(0,1,2))
-    assertRaises(TypeError, lambda: IP(0,1,2,3,4))
+    assertTypeError(lambda: IP(0))
+    assertTypeError(lambda: IP(0,1,2))
+    assertTypeError(lambda: IP(0,1,2,3,4))
     
     assert SC() == 'SC;'
     assert sc() == 'SC;'
     assert SC(0,1,2,3) == 'SC0,1,2,3;'
     assert SC(0,1,2,3,4) == 'SC0,1,2,3,4;'
     assert SC(0,1,2,3,4,5,6) == 'SC0,1,2,3,4,5,6;'
-    assertRaises(TypeError, lambda: SC(0))
-    assertRaises(TypeError, lambda: SC(0,1))
-    assertRaises(TypeError, lambda: SC(0,1,2))
-    assertRaises(TypeError, lambda: SC(0,1,2,3,4,5))
-    assertRaises(TypeError, lambda: SC(0,1,2,3,4,5,6,7))
+    assertTypeError(lambda: SC(0))
+    assertTypeError(lambda: SC(0,1))
+    assertTypeError(lambda: SC(0,1,2))
+    assertTypeError(lambda: SC(0,1,2,3,4,5))
+    assertTypeError(lambda: SC(0,1,2,3,4,5,6,7))
     
     # Chapter 4: Drawing Lines and Rectangles
     
     assert EA(0,1) == 'EA0,1;'
     assert ea(0,1) == 'EA0,1;'
-    assertRaises(TypeError, lambda: EA())
-    assertRaises(TypeError, lambda: EA(0))
-    assertRaises(TypeError, lambda: EA(0,1,2))
+    assertTypeError(lambda: EA())
+    assertTypeError(lambda: EA(0))
+    assertTypeError(lambda: EA(0,1,2))
     
     assert ER(0,1) == 'ER0,1;'
     assert er(0,1) == 'ER0,1;'
-    assertRaises(TypeError, lambda: ER())
-    assertRaises(TypeError, lambda: ER(0))
-    assertRaises(TypeError, lambda: ER(0,1,2))
+    assertTypeError(lambda: ER())
+    assertTypeError(lambda: ER(0))
+    assertTypeError(lambda: ER(0,1,2))
     
     assert PA() == 'PA;'
     assert pa() == 'PA;'
@@ -109,10 +112,86 @@ if __name__ == '__main__':
     assert sp() == 'SP;'
     for i in range(9):
         assert SP(i) == f'SP{i};'
-    assertRaises(TypeError, lambda: SP(0,1))
+    assertTypeError(lambda: SP(0,1))
     
     # Part II – Advanced Plotting
     # Chapter 5: Enhancing Your Plots
     
+    assert FT() == 'FT;'
+    assert ft() == 'FT;'
+    assert FT(0) == 'FT0;'
+    assert FT(0,1) == 'FT0,1;'
+    assert FT(0,1,2) == 'FT0,1,2;'
+    assertTypeError(lambda: FT(0,1,2,3))
+    
+    assert LT() == 'LT;'
+    assert lt() == 'LT;'
+    assert LT(0) == 'LT0;'
+    assert LT(0,1) == 'LT0,1;'
+    assertTypeError(lambda: LT(0,1,2))
+    
+    assert PT() == 'PT;'
+    assert pt() == 'PT;'
+    assert PT(0) == 'PT0;'
+    assertTypeError(lambda: PT(0,1))
+    
+    assert RA(0,1) == 'RA0,1;'
+    assert ra(0,1) == 'RA0,1;'
+    assertTypeError(lambda: RA())
+    assertTypeError(lambda: RA(0))
+    assertTypeError(lambda: RA(0,1,2))
+    
+    assert RR(0,1) == 'RR0,1;'
+    assert rr(0,1) == 'RR0,1;'
+    assertTypeError(lambda: RR())
+    assertTypeError(lambda: RR(0))
+    assertTypeError(lambda: RR(0,1,2))
+    
+    assert SM() == 'SM;'
+    assert sm() == 'SM;'
+    assert SM('a') == 'SMa;'
+    assert SM('a','x') == 'SMa,x;'
+    assertTypeError(lambda: SM(0,1,2))
+    assertTypeError(lambda: SM('a','b','c'))
+    assertRaises(ValueError, lambda: SM('ab'))
+    assertRaises(ValueError, lambda: SM('a','bc'))
+    
+    assert TL() == 'TL;'
+    assert tl() == 'TL;'
+    assert TL(0) == 'TL0;'
+    assert TL(0,1) == 'TL0,1;'
+    assertTypeError(lambda: TL(0,1,2))
+    
+    assert UF() == 'UF;'
+    assert uf() == 'UF;'
+    assert UF(0) == 'UF0;'
+    assert UF(0,1) == 'UF0,1;'
+    assert UF(0,1,2) == 'UF0,1,2;'
+    assert UF(0,1,2,3) == 'UF0,1,2,3;'
+    assert UF(0,1,2,3,4) == 'UF0,1,2,3,4;'
+    assert UF(0,1,2,3,4,5) == 'UF0,1,2,3,4,5;'
+    assert UF(0,1,2,3,4,5,6) == 'UF0,1,2,3,4,5,6;'
+    assert UF(0,1,2,3,4,5,6,7) == 'UF0,1,2,3,4,5,6,7;'
+    assert UF(0,1,2,3,4,5,6,7,8) == 'UF0,1,2,3,4,5,6,7,8;'
+    assert UF(0,1,2,3,4,5,6,7,8,9) == 'UF0,1,2,3,4,5,6,7,8,9;'
+    assert UF(0,1,2,3,4,5,6,7,8,9,10) == 'UF0,1,2,3,4,5,6,7,8,9,10;'
+    assert UF(0,1,2,3,4,5,6,7,8,9,10,11) == 'UF0,1,2,3,4,5,6,7,8,9,10,11;'
+    assert UF(0,1,2,3,4,5,6,7,8,9,10,11,12) == 'UF0,1,2,3,4,5,6,7,8,9,10,11,12;'
+    assert UF(0,1,2,3,4,5,6,7,8,9,10,11,12,13) == 'UF0,1,2,3,4,5,6,7,8,9,10,11,12,13;'
+    assert UF(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14) == 'UF0,1,2,3,4,5,6,7,8,9,10,11,12,13,14;'
+    assert UF(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15) == 'UF0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15;'
+    assert UF(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16) == 'UF0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16;'
+    assert UF(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17) == 'UF0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17;'
+    assert UF(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18) == 'UF0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18;'
+    assert UF(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19) == 'UF0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19;'
+    assertTypeError(lambda: UF(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20))
+    
+    assert XT() == 'XT;'
+    assert xt() == 'XT;'
+    assertTypeError(lambda: XT(0))
+    
+    assert YT() == 'YT;'
+    assert yt() == 'YT;'
+    assertTypeError(lambda: YT(0))
     
     

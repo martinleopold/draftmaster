@@ -240,6 +240,10 @@ def SM(character=None, character2=None):
         ['character'],
         ['character', 'character2']
     ], locals())
+    if (character != None and len(character) != 1):
+        raise ValueError('Only a single character is allowed for parameter character')
+    if (character2 != None and len(character2) != 1):
+        raise ValueError('Only a single character is allowed for parameter character2')
     args = _join_args(args)
     return _cmd(f'SM{args};')
 
@@ -286,7 +290,7 @@ def UF(gap1=None, gap2=None, gap3=None, gap4=None, gap5=None, gap6=None, gap7=No
         ['gap1', 'gap2', 'gap3', 'gap4', 'gap5', 'gap6', 'gap7', 'gap8', 'gap9', 'gap10', 'gap11', 'gap12', 'gap13', 'gap14', 'gap15', 'gap16', 'gap17', 'gap18', 'gap19', 'gap20']
     ], locals())
     args = _join_args(args)
-    return _cmd(f'TL{args};')
+    return _cmd(f'UF{args};')
 
 def XT():
     # See page 5-28
