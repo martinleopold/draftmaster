@@ -341,7 +341,7 @@ def CI(radius, chord_tolerance=None):
     '''
     args = _check_args([
         ['radius'],
-        ['radius' 'chord_tolerance']
+        ['radius', 'chord_tolerance']
     ], locals())
     args = _join_args(args)
     return _cmd(f'CI{args};')

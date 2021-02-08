@@ -194,4 +194,48 @@ if __name__ == '__main__':
     assert yt() == 'YT;'
     assertTypeError(lambda: YT(0))
     
+    # Chapter 6: Drawing Circles, Arcs, and Wedges
+    
+    assert AA(0,1,2) == 'AA0,1,2;'
+    assert aa(0,1,2) == 'AA0,1,2;'
+    assert AA(0,1,2,3) == 'AA0,1,2,3;'
+    assertTypeError(lambda: AA())
+    assertTypeError(lambda: AA(0))
+    assertTypeError(lambda: AA(0,1))
+    assertTypeError(lambda: AA(0,1,2,3,4))
+    
+    assert AR(0,1,2) == 'AR0,1,2;'
+    assert ar(0,1,2) == 'AR0,1,2;'
+    assert AR(0,1,2,3) == 'AR0,1,2,3;'
+    assertTypeError(lambda: AR())
+    assertTypeError(lambda: AR(0))
+    assertTypeError(lambda: AR(0,1))
+    assertTypeError(lambda: AR(0,1,2,3,4))
+    
+    assert CI(10) == 'CI10;'
+    assert ci(10) == 'CI10;'
+    assert CI(10,20) == 'CI10,20;'
+    assertTypeError(lambda: CI())
+    assertTypeError(lambda: CI(10,20,30))
+    
+    assert CT() == 'CT;'
+    assert ct() == 'CT;'
+    assert CT(0) == 'CT0;'
+    assertTypeError(lambda: CT(0,1))
+    
+    assert EW(1,2,3) == 'EW1,2,3;'
+    assert ew(1,2,3) == 'EW1,2,3;'
+    assert EW(1,2,3,4) == 'EW1,2,3,4;'
+    assertTypeError(lambda: EW())
+    assertTypeError(lambda: EW(1))
+    assertTypeError(lambda: EW(1,2))
+    assertTypeError(lambda: EW(1,2,3,4,5))
+    
+    assert WG(1,2,3) == 'WG1,2,3;'
+    assert wg(1,2,3) == 'WG1,2,3;'
+    assert WG(1,2,3,4) == 'WG1,2,3,4;'
+    assertTypeError(lambda: WG())
+    assertTypeError(lambda: WG(1))
+    assertTypeError(lambda: WG(1,2))
+    assertTypeError(lambda: WG(1,2,3,4,5))
     
