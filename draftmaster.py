@@ -148,13 +148,85 @@ def _add_lowercase():
 
 
 
-# See page 14-15
-_hpgl_error_numbers = ['No error', 'Instruction not recognized', 'Wrong number of parameters', 'Out-of range parameter, or illegal character', 'Not used', 'Unknown character set', 'Position overflow (not reported with default E-mask value)', 'Buffer overflow for polygons']
+# See OE, page 14-15
+_hpgl_errors = {
+    0: 'No error',
+    1: 'Instruction not recognized',
+    2: 'Wrong number of parameters',
+    3: 'Out-of range parameter, or illegal character',
+    4: 'Not used',
+    5: 'Unknown character set',
+    6: 'Position overflow (not reported with default E-mask value)',
+    7: 'Buffer overflow for polygons'
+}
 
-# See page 14-24
-_status_bits = ['Pen down', 'P1 or P2 newly established; cleared by OP', 'Digitized point available; cleared by OD', 'Initialized; cleared by OS', 'Ready for data (buffer empty)', 'Error, cleared by OE', 'Request service (always 0 for OS; or 1 for HP-IB serial poll)', 'Not used (always set to "0")']
+# See OS, page 14-24
+_status_bits = {
+    0: 'Pen down',
+    1: 'P1 or P2 newly established; cleared by OP',
+    2: 'Digitized point available; cleared by OD',
+    3: 'Initialized; cleared by OS',
+    4: 'Ready for data (buffer empty)',
+    5: 'Error, cleared by OE',
+    6: 'Request service (always 0 for OS; or 1 for HP-IB serial poll)',
+    7: 'Not used (always set to "0")'
+}
 
+# See OT, page 14-25
+_carousel_types = {
+    -1: 'unknown',
+     0: 'not installed',
+     1: 'paper fibre-tip pens',
+     2: 'roller-ball pens',
+     3: 'refillable drafting pens',
+     4: 'transparency fibre-tip pens',
+     5: 'disposable drafting pens'
+}
 
+# See ESC.E, page 15-9
+_extended_errors = {
+     0: 'No I/O rror has occured.',
+    10: 'Output instruction received while another output instruction is executing. The original instruction will continue normally; the second instruction received will be ignored.',
+    11: 'Invalid byte received after first two characters, ESC., in a device-control instruction.',
+    12: 'Invalid byte received while parsing a device-control instruction. The parameter containing the invalid byte and all following parameters are defaulted.',
+    13: 'Parameter out of range.',
+    14: 'Too many parameters received. Additional parameters beyond the proper number are ignored; parsing of the instruction ends when a colon (normal exit) or the first byte of another instruction is received (abnormal) exit.',
+    15: 'A framing error, parity error, or overrun error has been detected.',
+    16: 'The input buffer has overflowed. As a result, one or more bytes of data have been lost and therefore, an HP-GL error will probably occur.',
+    17: 'Baud rate mismatch or, full-duplex communication is selected and conditions for data transmission are not met, i.e., cabling is configured for three-wire communications.',
+    18: 'I/O error of indeterminate cause.'
+}
+
+# See ESC.O, page 15-15
+_extended_status_bits = {
+     0: ('Single sheet loaded.', 'Roll paper loaded'),
+     1: ('\'Clean\' paper loaded. (Reset after paper is sensed.)', 'Current page is not clean. Set after executing a pen down or at power-up when no paper is loaded, setting bit 5.'),
+     2: ('No paper advance (no AF, AH, FR, or PG instruction executed) since last ESC.O instruction. The ESC.O instruction resets this bis to 0.', 'Paper advance instruction (AF, AH, FR, or PG) executed since last ESC.O instruction'),
+     3: ('I/O and pen sort buffer are not empty.', 'I/O and pen sort buffers are empty and ready for data.'),
+     4: ('If bit 5 is 0 as well: Ready state. Processing HG-GL instructions. ', 'View state. Paper loaded but graphics suspended.'),
+     5: ('If bit 4 is 0 as well: Ready state. Processing HG-GL instructions.', 'Not ready. Paper not loaded, graphics suspended.'),
+     6: ('Cover is lowered.', 'Cover is open.'),
+     7: ('Emulate mode is OFF.', 'Emulate mode is ON.'),
+     8: ('Expand mode is OFF.', 'Expand mode is ON.'),
+     9: ('ESC.0, ESC.U, WD, or OK instruction has been executed. Execution of each of these instructions resers this bit to 0.', 'Function key has been pressed while plotter is in keyboard mode.'),
+    10: ('Servo is functioning', 'Servo is not functioning.'),
+    11: ('Invert Plot is ON', 'Invert Plot is OFF'),
+    12: ('Not used', 'Not used'),
+    13: ('Not used', 'Not used'),
+    14: ('Not used', 'Not used'),
+    15: ('Not used', 'Not used')
+}
+
+# See ESC.S, page 15-20
+_buffers = {
+    0: 'Total configurable memory',
+    1: 'Physical I/O buffer',
+    2: 'Polygon buffer',
+    3: 'Downloadable character buffer',
+    4: 'Reserved buffer',
+    5: 'Vector buffer',
+    6: 'Pen sort buffer'
+}
 
 # Chapter 3: Beginning Your HP-GL Program
 
