@@ -495,3 +495,64 @@ if __name__ == '__main__':
     assert PS(10,20) == 'PS10,20;'
     assertTypeError(lambda: PS(0,1,2))
     
+    # Chapter 13: Alternate Character Sets and User-Designed Characters
+    
+    assert CA() == 'CA;'
+    assert ca() == 'CA;'
+    assert CA(0) == 'CA0;'
+    assertTypeError(lambda: CA(0,1))
+    
+    assert CC() == 'CC;'
+    assert cc() == 'CC;'
+    assert CC(0) == 'CC0;'
+    assertTypeError(lambda: CC(0,1))
+    
+    assert CM() == 'CM;'
+    assert cm() == 'CM;'
+    assert CM(0) == 'CM0;'
+    assert CM(0,1) == 'CM0,1;'
+    assertTypeError(lambda: CM(0,1,2))
+    
+    assert CS() == 'CS;'
+    assert cs() == 'CS;'
+    assert CS(0) == 'CS0;'
+    assertTypeError(lambda: CS(0,1))
+
+    assert DL() == 'DL;'
+    assert dl() == 'DL;'
+    assert DL(0) == 'DL0;'
+    assert DL(0,1) == 'DL0,1;'
+    assert DL(0,1,2) == 'DL0,1,2;'
+    assert DL(0,1,2,3) == 'DL0,1,2,3;'
+    assert DL(0,1,2,3,4) == 'DL0,1,2,3,4;'
+    assert DL(0,-1,2,3,-1,4,5,6,7) == 'DL0,-1,2,3,-1,4,5,6,7;'
+    
+    assert DS() == 'DS;'
+    assert ds() == 'DS;'
+    assert DS(0,1) == 'DS0,1;'
+    assertTypeError(lambda: DS(0))
+    assertTypeError(lambda: DS(0,1,2))
+    
+    assert IV() == 'IV;'
+    assert iv() == 'IV;'
+    assert IV(0) == 'IV0;'
+    assert IV(0,1) == 'IV0,1;'
+    assertTypeError(lambda: IV(0,1,2))
+
+    assert SA() == 'SA;'
+    assert sa() == 'SA;'
+    assertTypeError(lambda: SA(0))
+    
+    assert SS() == 'SS;'
+    assert ss() == 'SS;'
+    assertTypeError(lambda: SS(0))
+    
+    assert UC() == 'UC;'
+    assert uc() == 'UC;'
+    assert UC(0) == 'UC0;'
+    assert UC(0,1) == 'UC0,1;'
+    assert UC(0,1,2) == 'UC0,1,2;'
+    assert UC(0,1,2,3) == 'UC0,1,2,3;'
+    assert UC(0,1,2,3,4) == 'UC0,1,2,3,4;'
+    assert UC(0,-1,2,3,-1,4,5,6,7) == 'UC0,-1,2,3,-1,4,5,6,7;'
+    
