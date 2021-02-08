@@ -22,7 +22,7 @@ def _check_args(forms, args):
     for required_args in forms:
         if set(arg_names) == set(required_args):
             return [ (arg_name, args[arg_name]) for arg_name in arg_names ] # Return enumeration of arg name and arg value
-    raise ValueError(f'Argument error. Args given: {arg_names}. Allowed forms: {", ".join(map(str, forms))}')
+    raise TypeError(f'Argument error. Args given: {arg_names}. Allowed forms: {", ".join(map(str, forms))}')
 
 def _join_args(args, sep=','):
     '''Takes an enumeration of arg names and values and returns a string of joined arg values'''
@@ -59,9 +59,6 @@ def DF():
     '''DF, Default
     USE: Set certain graphics functions to their predefined default settings. Use this instruction to return the plotter to a known state while maintaining the current locations of P1 and P2. When you use DF at the beginning of a program, unwanted graphics parameters such as character size, slant, or scaling are not inherited from another program.
     '''
-    _check_args([
-        []
-    ], locals())
     return _cmd('DF;')
 
 def IN(partial=False):
