@@ -611,3 +611,70 @@ if __name__ == '__main__':
     assert ot() == 'OT;'
     assertTypeError(lambda: OT(0))
     
+    
+    # Chapter 15: Device-Control Instructions
+    _esc = chr(27)
+    
+    assert ESC_A() == f'{_esc}.A'
+    assertTypeError(lambda: ESC_A(0))
+    
+    assert ESC_B() == f'{_esc}.B'
+    assertTypeError(lambda: ESC_B(0))
+    
+    assert ESC_E() == f'{_esc}.E'
+    assertTypeError(lambda: ESC_E(0))
+    
+    assert ESC_J() == f'{_esc}.J'
+    assertTypeError(lambda: ESC_J(0))
+    
+    assert ESC_K() == f'{_esc}.K'
+    assertTypeError(lambda: ESC_K(0))
+    
+    assert ESC_L() == f'{_esc}.L'
+    assertTypeError(lambda: ESC_L(0))
+    
+    assert ESC_O() == f'{_esc}.O'
+    assertTypeError(lambda: ESC_O(0))
+    
+    assert ESC_Q() == f'{_esc}.Q:'
+    assert ESC_Q(0) == f'{_esc}.Q0:'
+    assert ESC_Q(1) == f'{_esc}.Q1:'
+    assertTypeError(lambda: ESC_Q(0,1))
+    
+    assert ESC_R() == f'{_esc}.R'
+    assertTypeError(lambda: ESC_R(0))
+    
+    assert ESC_S(0) == f'{_esc}.S0:'
+    assert ESC_S(1) == f'{_esc}.S1:'
+    assertTypeError(lambda: ESC_S())
+    assertTypeError(lambda: ESC_S(0,1))
+    
+    assert ESC_T() == f'{_esc}.T;;;0;;:'
+    assert ESC_T(1) == f'{_esc}.T1;;;0;;:'
+    assert ESC_T(1,2) == f'{_esc}.T1;2;;0;;:'
+    assert ESC_T(1,2,3) == f'{_esc}.T1;2;3;0;;:'
+    assert ESC_T(1,2,3,4) == f'{_esc}.T1;2;3;0;4;:'
+    assert ESC_T(1,2,3,4,5) == f'{_esc}.T1;2;3;0;4;5:'
+    assert ESC_T(physical_io_buffer=1) == f'{_esc}.T1;;;0;;:'
+    assert ESC_T(polygon_buffer=1) == f'{_esc}.T;1;;0;;:'
+    assert ESC_T(downloadable_character_buffer=1) == f'{_esc}.T;;1;0;;:'
+    assert ESC_T(vector_buffer=1) == f'{_esc}.T;;;0;1;:'
+    assert ESC_T(pen_sort_buffer=1) == f'{_esc}.T;;;0;;1:'
+    assertTypeError(lambda: ESC_T(0,1,2,3,4,5))
+    
+    assert ESC_U() == f'{_esc}.U'
+    assertTypeError(lambda: ESC_U(0))
+    
+    assert ESC_Y() == f'{_esc}.Y'
+    assertTypeError(lambda: ESC_Y(0))
+    
+    assert ESC_Z() == f'{_esc}.Z'
+    assertTypeError(lambda: ESC_Z(0))
+    
+    assert ESC_AT() == f'{_esc}.@;:'
+    assert ESC_AT(1) == f'{_esc}.@1;:'
+    assert ESC_AT(1,2) == f'{_esc}.@1;2:'
+    assert ESC_AT(logical_io_buffer_size=1) == f'{_esc}.@1;:'
+    assert ESC_AT(io_conditions=1) == f'{_esc}.@;1:'
+    assertTypeError(lambda: ESC_AT(1,2,3))
+    

@@ -1152,21 +1152,15 @@ def ESC_S(n):
     '''
     return _cmd(f'\x1b.S{n}:');
 
-def ESC_T(physical_io_buffer=None, polygon_buffer=None, downloadable_character_buffer=None, vector_buffer=None, pen_sort_buffer=None):
+def ESC_T(physical_io_buffer='', polygon_buffer='', downloadable_character_buffer='', vector_buffer='', pen_sort_buffer=''):
     # See page 15-21
     '''ESC.T, Allocate Configurable Memory
     USE: Allocates memory in user-definable RAM, which consists of five buffers: the physical I/O buffer, polygon buffer, downloadable character buffer, vector buffer, and pen sort buffer. Use this instruction to change the sizes of these buffers as needed.
     '''
     args = _check_args([
-        [],
-        ['physical_io_buffer'],
-        ['physical_io_buffer', 'polygon_buffer'],
-        ['physical_io_buffer', 'polygon_buffer', 'downloadable_character_buffer'],
-        ['physical_io_buffer', 'polygon_buffer', 'downloadable_character_buffer', 'vector_buffer'],
-        ['physical_io_buffer', 'polygon_buffer', 'downloadable_character_buffer', 'vector_buffer', 'pen_sort_buffer'],
+        ['physical_io_buffer', 'polygon_buffer', 'downloadable_character_buffer',  'vector_buffer', 'pen_sort_buffer'],
     ], locals())
-    args = _join_args(args, sep=';')
-    return _cmd(f'\x1b.T{args}:');
+    return _cmd(f'\x1b.T{physical_io_buffer};{polygon_buffer};{downloadable_character_buffer};0;{vector_buffer};{pen_sort_buffer}:');
 
 def ESC_U():
     # See page 15-24
@@ -1187,16 +1181,14 @@ def ESC_Z():
     '''ESC.Z or ESC.), Plotter Off
     USE: Disables the plotter so that it accepts only a plotter-on instruction. Use this instruction in Eavesdrop (RS-232-C interface only) to establish programmed-off operation.
     '''
-    return _cmd('\x1b.Y');
+    return _cmd('\x1b.Z');
 
-def ESC_AT(logical_io_buffer_size=None, io_conditions=None):
+def ESC_AT(logical_io_buffer_size='', io_conditions=''):
     # See page 15-26
     '''ESC.@, Set Plotter Configuration
     USE: For RS-232-C users, this instruction sets an effective logical I/O buffer size and controls hardwire handshake, communications protocol, monitor modes 1 and 2, and block I/O error checking.
     '''
     args = _check_args([
-        [],
-        ['logical_io_buffer_size'],
         ['logical_io_buffer_size', 'io_conditions']
     ], locals())
     args = _join_args(args, sep=';')
