@@ -450,3 +450,48 @@ if __name__ == '__main__':
     assertValueError(lambda: WD(chr(27)))
     assertValueError(lambda: WD(chr(127)))
     
+    # Part III – Special Applications
+    # Chapter 11: Digitizing
+    
+    assert DC() == 'DC;'
+    assert dc() == 'DC;'
+    assertTypeError(lambda: DC(0))
+    
+    assert DP() == 'DP;'
+    assert dp() == 'DP;'
+    assertTypeError(lambda: DP(0))
+    
+    assert OD() == 'OD;'
+    assert od() == 'OD;'
+    assertTypeError(lambda: OD(0))
+    
+    # Chapter 12: Rollfeed Instructions and Long-Axis Printing
+    
+    assert AF() == 'AF;'
+    assert af() == 'AF;'
+    assertTypeError(lambda: AF(0))
+    
+    assert AH() == 'AH;'
+    assert ah() == 'AH;'
+    assertTypeError(lambda: AH(0))
+    
+    assert EC() == 'EC;'
+    assert ec() == 'EC;'
+    assert EC(0) == 'EC0;'
+    assertTypeError(lambda: EC(0,1))
+    
+    assert FR() == 'FR;'
+    assert fr() == 'FR;'
+    assertTypeError(lambda: FR(0))
+    
+    assert PG() == 'PG;'
+    assert pg() == 'PG;'
+    assert PG(0) == 'PG0;'
+    assertTypeError(lambda: PG(0,1))
+    
+    assert PS() == 'PS;'
+    assert ps() == 'PS;'
+    assert PS(10) == 'PS10;'
+    assert PS(10,20) == 'PS10,20;'
+    assertTypeError(lambda: PS(0,1,2))
+    
