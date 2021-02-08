@@ -9,6 +9,9 @@ def assertRaises(error, fn):
 def assertTypeError(fn):
     return assertRaises(TypeError, fn)
 
+def assertValueError(fn):
+    return assertRaises(ValueError, fn)
+
 if __name__ == '__main__':
     from draftmaster import *
     
@@ -153,8 +156,8 @@ if __name__ == '__main__':
     assert SM('a','x') == 'SMa,x;'
     assertTypeError(lambda: SM(0,1,2))
     assertTypeError(lambda: SM('a','b','c'))
-    assertRaises(ValueError, lambda: SM('ab'))
-    assertRaises(ValueError, lambda: SM('a','bc'))
+    assertValueError(lambda: SM('ab'))
+    assertValueError(lambda: SM('a','bc'))
     
     assert TL() == 'TL;'
     assert tl() == 'TL;'
@@ -238,4 +241,87 @@ if __name__ == '__main__':
     assertTypeError(lambda: WG(1))
     assertTypeError(lambda: WG(1,2))
     assertTypeError(lambda: WG(1,2,3,4,5))
+    
+    # Chapter 7: Labeling Your Plots
+    
+    assert BL() == 'BL\x03'
+    assert bl() == 'BL\x03'
+    assert BL(terminator='#') == 'BL#'
+    assert BL('abcxyz') == 'BLabcxyz\x03'
+    assertValueError(lambda: BL('012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789'))
+    
+    assert CP() == 'CP;'
+    assert cp() == 'CP;'
+    assert CP(0,1) == 'CP0,1;'
+    assertTypeError(lambda: CP(0))
+    assertTypeError(lambda: CP(0,1,2))
+
+    assert DI() == 'DI;'
+    assert di() == 'DI;'
+    assert DI(0,1) == 'DI0,1;'
+    assertTypeError(lambda: DI(0))
+    assertTypeError(lambda: DI(0,1,2))
+
+    assert DR() == 'DR;'
+    assert dr() == 'DR;'
+    assert DR(0,1) == 'DR0,1;'
+    assertTypeError(lambda: DR(0))
+    assertTypeError(lambda: DR(0,1,2))
+    
+    assert DT() == 'DT;'
+    assert dt() == 'DT;'
+    assert DT(0) == 'DT0;'
+    assert DT('\x03') == 'DT\x03;'
+    assertTypeError(lambda: DT(0,1))
+    assertValueError(lambda: DT(chr(0)))
+    assertValueError(lambda: DT(chr(5)))
+    assertValueError(lambda: DT(chr(10)))
+    assertValueError(lambda: DT(chr(27)))
+    assertValueError(lambda: DT(';'))
+    assertValueError(lambda: DT(chr(59)))
+    
+    assert DV() == 'DV;'
+    assert dv() == 'DV;'
+    assert DV(0) == 'DV0;'
+    assertTypeError(lambda: DV(0,1))
+    assertTypeError(lambda: DV(0,1,2))
+    
+    assert ES() == 'ES;'
+    assert es() == 'ES;'
+    assert ES(0) == 'ES0;'
+    assert ES(0,1) == 'ES0,1;'
+    assertTypeError(lambda: ES(0,1,2))
+    
+    assert LB('') == 'LB\x03'
+    assert lb('') == 'LB\x03'
+    assert LB('', terminator='#') == 'LB#'
+    assert LB('abc', terminator='#') == 'LBabc#'
+    assert LB('abcxyz') == 'LBabcxyz\x03'
+    assertValueError(lambda: LB('012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789'))
+    
+    assert LO() == 'LO;'
+    assert lo() == 'LO;'
+    assert LO(0) == 'LO0;'
+    assertTypeError(lambda: LO(0,1))
+    
+    assert PB() == 'PB;'
+    assert pb() == 'PB;'
+    assertTypeError(lambda: PB(0))
+    
+    assert SI() == 'SI;'
+    assert si() == 'SI;'
+    assert SI(0,1) == 'SI0,1;'
+    assertTypeError(lambda: SI(0))
+    assertTypeError(lambda: SI(0,1,2))
+    
+    assert SL() == 'SL;'
+    assert sl() == 'SL;'
+    assert SL(0) == 'SL0;'
+    assertTypeError(lambda: SL(0,1))
+    
+    assert SR() == 'SR;'
+    assert sr() == 'SR;'
+    assert SR(0,1) == 'SR0,1;'
+    assertTypeError(lambda: SR(0))
+    assertTypeError(lambda: SR(0,1,2))
     

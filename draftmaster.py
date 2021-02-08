@@ -395,7 +395,9 @@ def BL(cc=None, terminator='\x03'):
         ['terminator'],
         ['cc', 'terminator'],
     ], locals())
-    args = _join_args(args)
+    args = _join_args(args, sep='')
+    if len(args) > 150:
+        raise ValueError('cc can be up to 150 including control characters and the label terminator')
     return _cmd(f'BL{args}') # Note this command doesn't end with ';'
 
 def CP(spaces=None, lines=None):
@@ -444,6 +446,10 @@ def DT(label_terminator=None):
         ['label_terminator'],
     ], locals())
     args = _join_args(args)
+    if len(args) not in [0, 1]:
+        raise ValueError('label_terminator must be exactly one character')
+    if args in [chr(0), chr(5), chr(10), chr(27), ';']:
+        raise ValueError('label_terminator cannot be NULL, LF, ESC, ENQ and ;')
     return _cmd(f'DT{args};')
 
 def DV(n=None):
@@ -479,7 +485,9 @@ def LB(cc, terminator='\x03'):
     args = _check_args([
         ['cc', 'terminator'],
     ], locals())
-    args = _join_args(args)
+    args = _join_args(args, '')
+    if len(args) > 150:
+        raise ValueError('cc can be up to 150 including control characters and the label terminator')
     return _cmd(f'LB{args}') # Note this command doesn't end with ';'
 
 def LO(position_number=None):
