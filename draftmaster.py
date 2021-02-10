@@ -15,6 +15,7 @@ def open(device_name, rtscts=True, dsrdtr=True, read_timeout=5, **kwargs):
     read_timeout: Timeout for reads from the port
     kwargs: Any remaining keyword args are passed to the serial.Serial constructor
     '''
+    global _ser
     _ser = _serial.Serial(device_name, rtscts=rtscts, dsrdtr=dsrdtr, timeout=read_timeout, **kwargs)
 
 def set_write_immediate(on=True):
@@ -45,7 +46,7 @@ def close():
 def _write(str):
     '''Write a string to the serial port'''
     if _ser == None: return
-    ser.write(str.encode('ASCII'))
+    _ser.write(str.encode('ASCII'))
 
 def write():
     '''Write commands that have been buffered to the serial port. Applies only when using buffered mode i.e. set_write_buffered() has been called earlier. When using set_write_immediate() this function is called automatically after every command.'''
@@ -73,16 +74,23 @@ def _parse(str, fmt='s', sep=','):
     parsed = []
     for i, p in enumerate(parts):
         type = fmt[i] if i < len(fmt) else fmt[-1]
-        if type == 'n': # number
-            n = float(p)
-            if n.is_integer(): n = int(n)
-            parsed.append( n )
-        elif type == 'f': # float
-            parsed.append( float(p) )
-        elif type == 'i': # integer
-            parsed.append( int(p) )
-        else:
-            parsed.append( p )
+        try:
+            if type == 'n': # number
+                n = float(p)
+                if n.is_integer(): n = int(n)
+                parsed.append( n )
+            elif type == 'f': # float
+                parsed.append( float(p) )
+            elif type == 'i': # integer
+                parsed.append( int(p) )
+            else:
+                parsed.append( p )
+        except ValueError:
+            parsed.append( p ) # error when parsing, use string value
+    if len(parsed) == 0: 
+        return None
+    if len(parsed) == 1:
+        return parsed[0]
     return tuple(parsed)
 
 def read_raw():
@@ -93,6 +101,7 @@ def read_raw():
 def read(parse_fmt=None, parse_sep=None):
     '''Read a response from the serial port. The response will be parsed into a tuple before it is returned. To override parsing, you can use parse_fmt and optionally parse_sep. See _parse() for how to use parse_fmt and parse_sep.'''
     str = _read()
+    if str == None: return
     fmt = _output_formats.pop(0)
     if parse_fmt == None and fmt:
         return _parse(str, fmt, ',')
