@@ -132,10 +132,28 @@ def _add_lowercase():
         # add trailing _ if the new command name is a reserved word (e.g. in, if, is, or)
         if cmd_new in kwlist: g[cmd_new + '_'] = g[cmd]
 
+def _instructions_dict():
+    '''No need to call directly. Creates dict(s) of mnemonic to instruction name. Returns two dicts, one for HP-GL instrucions, one for device-control instructions.'''
+    def name_from_docstring(ds):
+        ds = ds.split('\n', maxsplit=1)[0] # use first line only
+        ds = ds.split(',', maxsplit=1)[1] # use part after comma 
+        ds = ds.strip()
+        return ds
+    g = globals()
+    inst = list( filter(lambda n: len(n) == 2 and n.isupper(), g) ) # Graphics/HP-GL instructions
+    inst.sort()
+    inst = { cmd_name: name_from_docstring(g[cmd_name].__doc__) for cmd_name in inst }
+    dc_inst = list( filter(lambda n: n.startswith('ESC_'), g) ) # Device-Control instructions
+    dc_inst.sort()
+    dc_inst = { cmd_name: name_from_docstring(g[cmd_name].__doc__) for cmd_name in dc_inst }
+    # Put ESC_AT at the end of the list
+    esc_at = dc_inst['ESC_AT']
+    del dc_inst['ESC_AT']
+    dc_inst['ESC_AT'] = esc_at
+    return (inst, dc_inst)
 
-
-# HP GL Instructions (Graphics instructions, output instructions)
-# Device Control Instructions
+# HP GL Instructions (Graphics instructions, Output instructions): 91
+# Device Control Instructions: 20
 
 # Numbers accepted: -8 388 608 (-2e23) to 8 388 607 (2e23-1)
 
@@ -229,6 +247,7 @@ _buffers = {
     6: 'Pen sort buffer'
 }
 
+# Part I – Fundamental Concepts & Plotting
 # Chapter 3: Beginning Your HP-GL Program
 
 def DF():
@@ -756,7 +775,7 @@ def GM(polygon_buffer=None, downloadable_character_buffer=None, reserved_buffer=
 
 def PM(n=None):
     # See page 8-21
-    '''PM, Polygon Mode Instruction
+    '''PM, Polygon Mode
     USE: Enters polygon mode for defining shapes such as block letters, logos, surface charts, or any unique or intricate area, and exits for subsequent filling and/or edging. Fills polygons using the fill polygon (FP) instruction and/or outline them using the edge polygon (EP) instruction.
     '''
     args = _check_args([
@@ -1479,3 +1498,5 @@ def ESC_P(handshake=''):
 
 
 _add_lowercase()
+
+_instructions = _instructions_dict()
