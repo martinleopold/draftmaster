@@ -1,4 +1,5 @@
 import serial as _serial
+import time as _time
 
 _ser = None # Serial connection object
 _immediate = True # Immediately write commands to the serial port?
@@ -6,6 +7,7 @@ _read_until = '\r' # Terminator sequence for reads
 _commands = [] # Command buffer
 _output_formats = [] # Saves format for commands that produce output. Used for parsing outputs. Dequeued on read
 _instructions = {} # Two dicts mapping mnemonics to instruction names. For documentation.
+_debug = False
 
 def open(device_name, rtscts=True, dsrdtr=True, read_timeout=5, **kwargs):
     '''Open serial port
@@ -38,15 +40,18 @@ def set_read_timeout(timeout=5):
     if _ser == None: return
     _ser.timeout = timeout
 
-def close():
-    '''Close the serial connection'''
+def close(delay=0.3):
+    '''Close the serial connection
+    delay: wait time (in seconds) before closing the connection. A minimum of 0.1 seems to be necessary for the plotter to react to previous commands (if the program doesn't wait itself).'''
     if _ser == None: return
+    if delay > 0: _time.sleep(delay)
     _ser.close()
 
 def _write(str):
     '''Write a string to the serial port'''
     if _ser == None: return
     _ser.write(str.encode('ASCII'))
+    if _debug: print(f'write: {str}')
 
 def write():
     '''Write commands that have been buffered to the serial port. Applies only when using buffered mode i.e. set_write_buffered() has been called earlier. When using set_write_immediate() this function is called automatically after every command.'''
@@ -60,6 +65,7 @@ def _read():
     if _ser == None: return
     res = _ser.read_until( _read_until.encode('ASCII') )
     res = res[:-len(_read_until)].decode('ASCII')
+    if _debug: print(f' read: {res}')
     return res
 
 def _parse(str, fmt='s', sep=','):
