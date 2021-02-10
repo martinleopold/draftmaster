@@ -9,16 +9,16 @@ _output_formats = [] # Saves format for commands that produce output. Used for p
 _instructions = {} # Two dicts mapping mnemonics to instruction names. For documentation.
 _debug = False
 
-def open(device_name, rtscts=True, dsrdtr=True, read_timeout=5, **kwargs):
+def open(device_name_or_url, rtscts=True, dsrdtr=True, read_timeout=5, **kwargs):
     '''Open serial port
-    device_name: Name of serial port/device
+    device_name_or_url: Name of serial port/device. See here for accepted URLs: https://pythonhosted.org/pyserial/url_handlers.html
     rtscts: Use RTS/CTS-type hardwire handshake? 
-    dsrdts: Use DSR/DTS-typ hardwire handshake?
+    dsrdts: Use DSR/DTS-typ hardwire handshake? (None follows rtscts setting)
     read_timeout: Timeout for reads from the port
     kwargs: Any remaining keyword args are passed to the serial.Serial constructor
     '''
     global _ser
-    _ser = _serial.Serial(device_name, rtscts=rtscts, dsrdtr=dsrdtr, timeout=read_timeout, **kwargs)
+    _ser = _serial.serial_for_url(device_name_or_url, rtscts=rtscts, dsrdtr=dsrdtr, timeout=read_timeout, **kwargs)
 
 def set_write_immediate(on=True):
     '''Immediately write commands to the serial port?'''
@@ -42,7 +42,7 @@ def set_read_timeout(timeout=5):
 
 def close(delay=0.3):
     '''Close the serial connection
-    delay: wait time (in seconds) before closing the connection. A minimum of 0.1 seems to be necessary for the plotter to react to previous commands (if the program doesn't wait itself).'''
+    delay: Wait time (in seconds) before closing the connection. A minimum of 0.1 seems to be necessary for the plotter to react to previous commands (if the program doesn't wait itself).'''
     if _ser == None: return
     if delay > 0: _time.sleep(delay)
     _ser.close()
