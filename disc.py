@@ -5,6 +5,7 @@ open('/dev/tty.usbserial-A700CYY0')
 IN()
 
 SP(1) # pick pen 1
+# PT(0.7) # pen thickness (default 0.3)
 FT() # solid bidirectional fill
 PA(0,0) # center of plottable area
 WG(4072,0,360) # filled disc
