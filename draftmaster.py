@@ -8,6 +8,7 @@ _commands = [] # Command buffer
 _output_formats = [] # Saves format for commands that produce output. Used for parsing outputs. Dequeued on read
 _instructions = {} # Two dicts mapping mnemonics to instruction names. For documentation.
 _debug = False
+_dry = False # Dry-run capability. If trye don't actually read/write to/from serial.
 
 def open(device_name_or_url, rtscts=True, dsrdtr=True, read_timeout=5, **kwargs):
     '''Open serial port
@@ -50,7 +51,7 @@ def close(delay=0.3):
 def _write(str):
     '''Write a string to the serial port'''
     if _ser == None: return
-    _ser.write(str.encode('ASCII'))
+    if not _dry: _ser.write(str.encode('ASCII'))
     if _debug: print(f'write: {str}')
 
 def write():
@@ -63,8 +64,10 @@ def write():
 def _read():
     '''Read a string from the serial port'''
     if _ser == None: return
-    res = _ser.read_until( _read_until.encode('ASCII') )
-    res = res[:-len(_read_until)].decode('ASCII')
+    res = None
+    if not _dry:
+        res = _ser.read_until( _read_until.encode('ASCII') )
+        res = res[:-len(_read_until)].decode('ASCII')
     if _debug: print(f' read: {res}')
     return res
 
