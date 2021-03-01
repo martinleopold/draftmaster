@@ -10,16 +10,17 @@ _instructions = {} # Two dicts mapping mnemonics to instruction names. For docum
 _debug = False
 _dry = False # Dry-run capability. If trye don't actually read/write to/from serial.
 
-def open(device_name_or_url, rtscts=True, dsrdtr=True, read_timeout=5, **kwargs):
+def open(device_name_or_url, rtscts=False, dsrdtr=None, xonxoff=False, read_timeout=5, **kwargs):
     '''Open serial port
     device_name_or_url: Name of serial port/device. See here for accepted URLs: https://pythonhosted.org/pyserial/url_handlers.html
-    rtscts: Use RTS/CTS-type hardwire handshake? 
+    rtscts: Use RTS/CTS-type hardwire handshake?
     dsrdts: Use DSR/DTS-typ hardwire handshake? (None follows rtscts setting)
+    xonxoff: Use XON/XOFF software handshake?
     read_timeout: Timeout for reads from the port
     kwargs: Any remaining keyword args are passed to the serial.Serial constructor
     '''
     global _ser
-    _ser = _serial.serial_for_url(device_name_or_url, rtscts=rtscts, dsrdtr=dsrdtr, timeout=read_timeout, **kwargs)
+    _ser = _serial.serial_for_url(device_name_or_url, rtscts=rtscts, dsrdtr=dsrdtr, xonxoff=xonxoff, timeout=read_timeout, **kwargs)
 
 def set_write_immediate(on=True):
     '''Immediately write commands to the serial port?'''
