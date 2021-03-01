@@ -45,6 +45,7 @@ def close(delay=0.3):
     '''Close the serial connection
     delay: Wait time (in seconds) before closing the connection. A minimum of 0.1 seems to be necessary for the plotter to react to previous commands (if the program doesn't wait itself).'''
     if _ser == None: return
+    _ser.flush()
     if delay > 0: _time.sleep(delay)
     _ser.close()
 
