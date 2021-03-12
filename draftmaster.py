@@ -10,7 +10,7 @@ _instructions = {} # Two dicts mapping mnemonics to instruction names. For docum
 _debug = False
 _dry = False # Dry-run capability. If trye don't actually read/write to/from serial.
 
-def open(device_name_or_url, rtscts=False, dsrdtr=None, xonxoff=False, read_timeout=None, **kwargs):
+def open(device_name_or_url, rtscts=True, dsrdtr=None, xonxoff=False, read_timeout=None, **kwargs):
     '''Open serial port
     device_name_or_url: Name of serial port/device. See here for accepted URLs: https://pythonhosted.org/pyserial/url_handlers.html
     rtscts: Use RTS/CTS-type hardwire handshake?
