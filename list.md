@@ -12,3 +12,4 @@
 10) c39 tests, 2x (2021-02-26)
 11) c39 with buffer overflow, A2, c39_1.py (2021-02-26)
 12) c39 manual, ink, A3, c39_2.py (2021-02-26)
+13) fh tech. wibi 19/20 cover, ink, A2, svg-polygons.py (2021-03-12)
