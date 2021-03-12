@@ -20,7 +20,7 @@ def open(device_name_or_url, rtscts=False, dsrdtr=None, xonxoff=False, read_time
     kwargs: Any remaining keyword args are passed to the serial.Serial constructor
     '''
     global _ser
-    _ser = _serial.serial_for_url(device_name_or_url, rtscts=rtscts, dsrdtr=dsrdtr, xonxoff=xonxoff, timeout=read_timeout, **kwargs)
+    if not _dry: _ser = _serial.serial_for_url(device_name_or_url, rtscts=rtscts, dsrdtr=dsrdtr, xonxoff=xonxoff, timeout=read_timeout, **kwargs)
 
 def set_write_immediate(on=True):
     '''Immediately write commands to the serial port?'''
