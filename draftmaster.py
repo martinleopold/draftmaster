@@ -1298,7 +1298,7 @@ def OO():
     # See page 14-22
     '''OO, Output Options
     USE: Outputs eight option parameters indicating features implemented on the plotter. Some software packages use this feature to determine which plotter capabilities exist.
-    RESPONSE: C,1,0,0,1,1,0,1 (C indicates status of plotter paper check bit: 0..Sheet media is loaded and unmarke; 1..Roll media is loaded and unmarked; 2..Sheet media is loaded and plotted on; 3..Roll media is loaded and plotted on)
+    RESPONSE: C,1,0,0,1,1,0,1 (C indicates status of plotter paper check bit: 0..Sheet media is loaded and unmarked; 1..Roll media is loaded and unmarked; 2..Sheet media is loaded and plotted on; 3..Roll media is loaded and plotted on)
     '''
     _output_formats.append('nnnnnnnn')
     return _cmd('OO;')
