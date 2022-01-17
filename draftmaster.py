@@ -52,8 +52,9 @@ def close(delay=0.3):
 
 def _write(str):
     '''Write a string to the serial port'''
-    if _ser == None: return
-    if not _dry: _ser.write(str.encode('ASCII'))
+    if not _dry:
+        if _ser == None: return
+        _ser.write(str.encode('ASCII'))
     if _debug: print(f'write: {str}')
 
 def write():
