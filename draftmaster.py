@@ -14,7 +14,7 @@ def open(device_name_or_url, rtscts=True, dsrdtr=None, xonxoff=False, read_timeo
     '''Open serial port
     device_name_or_url: Name of serial port/device. See here for accepted URLs: https://pythonhosted.org/pyserial/url_handlers.html
     rtscts: Use RTS/CTS-type hardwire handshake?
-    dsrdts: Use DSR/DTS-typ hardwire handshake? (None follows rtscts setting)
+    dsrdtr: Use DTR/DSR-type hardwire handshake? (None follows rtscts setting)
     xonxoff: Use XON/XOFF software handshake?
     read_timeout: Timeout for reads from the port (None to wait indefinitely)
     kwargs: Any remaining keyword args are passed to the serial.Serial constructor
