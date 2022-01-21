@@ -1,14 +1,5 @@
 '''Show info (don't print anything)'''
-'''
-Notes: 
-Longer Axis is always X.
-Landscape: P1 bottom-left, P2 top-right, non-printable border at the bottom
-Portrait:  P1 top-left, P2 bottom-right, non-printable border at the bottom
-Paper loading:
-  A4: landscape
-  A3: portrait
-  A2: landscape
-'''
+
 from draftmaster import *
 import draftmaster as dm
 
