@@ -42,12 +42,14 @@ def set_read_timeout(timeout=5):
     if _ser == None: return
     _ser.timeout = timeout
 
-def close(delay=0.3):
+def close(delay=-1):
     '''Close the serial connection
-    delay: Wait time (in seconds) before closing the connection. A minimum of 0.1 seems to be necessary for the plotter to react to previous commands (if the program doesn't wait itself).'''
+    delay: Wait time (in seconds) before closing the connection. A minimum of 0.1 seems to be necessary for the plotter to react to previous commands (if the program doesn't wait itself).
+    Update 2022-01-21: Added indefinite wait by default. Seems to be the only way to get all commands across the wire.'''
     if _ser == None: return
     _ser.flush()
-    if delay > 0: _time.sleep(delay)
+    if delay < 0: input("Press ENTER to exit...")
+    elif delay > 0: _time.sleep(delay)
     _ser.close()
 
 def _write(str):
