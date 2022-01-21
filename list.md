@@ -17,3 +17,4 @@
 15) fh tech. companion piece test, ink, A3 (2021-03-15)
 16) fh tech. companion piece scaling test, dot pattern only, ink, A3 (2021-03-15)
 17) fh tech. round companion piece, ink, A2, svg-polygons2.py (2021-03-15)
+18) lemon, yellow pen, A3, lemon.py (2022-01-21)
