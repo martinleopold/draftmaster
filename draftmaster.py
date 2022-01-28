@@ -10,6 +10,11 @@ _instructions = {} # Two dicts mapping mnemonics to instruction names. For docum
 _debug = False
 _dry = False # Dry-run capability. If trye don't actually read/write to/from serial.
 
+# context manager support
+class cm_helper:
+    def __enter__(self): pass
+    def __exit__(self, type, value, traceback): close()
+
 def open(device_name_or_url, rtscts=True, dsrdtr=None, xonxoff=False, read_timeout=None, **kwargs):
     '''Open serial port
     device_name_or_url: Name of serial port/device. See here for accepted URLs: https://pythonhosted.org/pyserial/url_handlers.html
@@ -20,7 +25,12 @@ def open(device_name_or_url, rtscts=True, dsrdtr=None, xonxoff=False, read_timeo
     kwargs: Any remaining keyword args are passed to the serial.Serial constructor
     '''
     global _ser
-    if not _dry: _ser = _serial.serial_for_url(device_name_or_url, rtscts=rtscts, dsrdtr=dsrdtr, xonxoff=xonxoff, timeout=read_timeout, **kwargs)
+    try:
+        if not _dry: _ser = _serial.serial_for_url(device_name_or_url, rtscts=rtscts, dsrdtr=dsrdtr, xonxoff=xonxoff, timeout=read_timeout, **kwargs)
+    except OSError:
+        print(f'serial device not found: {device_name_or_url}')
+        exit()
+    return cm_helper() # context manager support ('with' statement)
 
 def set_write_immediate(on=True):
     '''Immediately write commands to the serial port?'''
@@ -42,15 +52,22 @@ def set_read_timeout(timeout=5):
     if _ser == None: return
     _ser.timeout = timeout
 
-def close(delay=-1):
+def close(delay=0, wait=True):
     '''Close the serial connection
     delay: Wait time (in seconds) before closing the connection. A minimum of 0.1 seems to be necessary for the plotter to react to previous commands (if the program doesn't wait itself).
     Update 2022-01-21: Added indefinite wait by default. Seems to be the only way to get all commands across the wire.'''
-    if _ser == None: return
-    _ser.flush()
+    # if _ser == None: return
+    if _ser: _ser.flush()
+    if wait:
+        if _debug: print('waiting for status response before closing...')
+        OS()
+        s = read()
+        if _ser:
+            s_bin = f'{s:08b}'
+            if _debug: print(f'status received: {s} ({s_bin[:4]} {s_bin[4:]})')
     if delay < 0: input("Press ENTER to exit...")
     elif delay > 0: _time.sleep(delay)
-    _ser.close()
+    if _ser: _ser.close()
 
 def _write(str):
     '''Write a string to the serial port'''
