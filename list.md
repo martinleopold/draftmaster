@@ -20,3 +20,5 @@
 18) lemon, yellow pen, A3, lemon.py (2022-01-21)
 19) owls, black, A4; owls.py (2022-01-28)
 20) owls, yellow blue black, A3; owls.py (2022-01-28)
+21) pattern fill test, 4 circles, A3; fill_patterns.py (2022-01-31)
+22) pattern fill test, 6 circles, A3; fill_patterns.py (2022-01-31)
