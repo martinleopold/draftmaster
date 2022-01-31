@@ -6,11 +6,25 @@ Paper Notes:
 * Portrait:  P1 top-left, P2 bottom-right, non-printable border at the bottom
 
 Paper loading:
-* A4: landscape
-* A3: portrait
-* A2: landscape
-* A1: ?
-* A0: ?
+| Paper Size | Dimensions    | Loading Direction |
+| ---------- | ------------- | ----------------- |
+| A4         | 210 × 297 mm  | either            |
+| ANSI A     | 216 × 279 mm  | either            |
+| –          |               |                   |
+| A3         | 297 × 420 mm  | portrait          |
+| ANSI B     | 279 × 432 mm  | portrait          |
+| –          |               |                   |
+| A2         | 420 × 594 mm  | landscape         |
+| ANSI C     | 432 × 559 mm  | landscape         |
+| Arch C     | 457 × 610 mm  | landscape         |
+| –          |               |                   |
+| A1         | 594 × 841 mm  | either            |
+| ANSI D     | 559 × 864 mm  | either            |
+| Arch D     | 610 × 914 mm  | either            |
+| –          |               |                   |
+| A0         | 841 × 1189 mm | portrait          |
+| ANSI E     | 864 × 1118 mm | portrait          |
+| Arch E     | 914 × 1219 mm | portrait          |
 
 Serial cable requirements:
 * Plotter port (labeled "Computer/Modem"): Female DB-25, RS232-C/CCITT V.24 
