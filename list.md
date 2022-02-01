@@ -22,3 +22,4 @@
 20) owls, yellow blue black, A3; owls.py (2022-01-28)
 21) pattern fill test, 4 circles, A3; fill_patterns.py (2022-01-31)
 22) pattern fill test, 6 circles, A3; fill_patterns.py (2022-01-31)
+23) shading test, 21 squares, 1cm^2 each, A3; shading_rest.py (2022-02-01)

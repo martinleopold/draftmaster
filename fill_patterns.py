@@ -45,7 +45,7 @@ IN()
 SP(1)
 
 PA(-115*40, 0)
-FT(3, 2*40, 45) # parallel lines (type, pacing, angle)
+FT(3, 2*40, 45) # parallel lines (type, spacing, angle)
 WG(R, 0, 360)
 EW(R, 0, 360)
 
