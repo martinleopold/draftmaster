@@ -15,9 +15,9 @@ class cm_helper:
     def __enter__(self): pass
     def __exit__(self, type, value, traceback): close()
 
-def open(device_name_or_url, rtscts=True, dsrdtr=None, xonxoff=False, read_timeout=None, **kwargs):
+def open(device_name_or_url='hwgrep://.*serial.*', rtscts=True, dsrdtr=None, xonxoff=False, read_timeout=None, **kwargs):
     '''Open serial port
-    device_name_or_url: Name of serial port/device. See here for accepted URLs: https://pythonhosted.org/pyserial/url_handlers.html
+    device_name_or_url: Name of serial port/device. See here for accepted URLs: https://pythonhosted.org/pyserial/url_handlers.html. If omitted uses the first port with 'serial' in its name.
     rtscts: Use RTS/CTS-type hardwire handshake?
     dsrdtr: Use DTR/DSR-type hardwire handshake? (None follows rtscts setting)
     xonxoff: Use XON/XOFF software handshake?
