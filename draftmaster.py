@@ -219,6 +219,14 @@ _hpgl_errors = {
     7: 'Buffer overflow for polygons'
 }
 
+# See OO, page 14-22
+_paper_check_bit = {
+    0: 'Sheet, unmarked',
+    1: 'Roll, unmarked',
+    2: 'Sheet, plotted on',
+    3: 'Roll, plotted on'
+}
+
 # See OS, page 14-24
 _status_bits = {
     0: 'Pen down',
@@ -235,11 +243,11 @@ _status_bits = {
 _carousel_types = {
     -1: 'unknown',
      0: 'not installed',
-     1: 'paper fibre-tip pens',
-     2: 'roller-ball pens',
-     3: 'refillable drafting pens',
-     4: 'transparency fibre-tip pens',
-     5: 'disposable drafting pens'
+     1: 'P (paper fibre-tip pens)',
+     2: 'R (roller-ball pens)',
+     3: 'F (refillable drafting pens)',
+     4: 'T (transparency fibre-tip pens)',
+     5: 'V (disposable drafting pens)'
 }
 
 # See ESC.E, page 15-9

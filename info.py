@@ -25,7 +25,6 @@ def detect_paper(d):
     for p in papers.items():
         allowed_x = ( p[1][0] * (1-TOLERANCE), p[1][0] * (1+TOLERANCE) )
         allowed_y = ( p[1][1] * (1-TOLERANCE), p[1][1] * (1+TOLERANCE) )
-        print(p[0], allowed_x, allowed_y)
         if d[0] >= allowed_x[0] and d[0] <= allowed_x[1] and d[1] + 24 >= allowed_y[0] and d[1] + 24 <= allowed_y[1]:
             return (p[0], p[1], 'portrait')
         if d[0] + 24 >= allowed_x[0] and d[0] + 24 <= allowed_x[1] and d[1] >= allowed_y[0] and d[1] <= allowed_y[1]:
@@ -40,6 +39,15 @@ def carousel_map(map):
     # return { i+1:status for i, status in enumerate(b) }
     return b[:4] + ' ' + b[4:]
 
+def status(bits):
+    bits = f'{bits:08b}'
+    bits = tuple(map(int, bits))
+    out = ''
+    for i, b in enumerate(bits):
+        if b: out += dm._status_bits[i] + '. '
+    out = out.strip()
+    return out
+
 open('/dev/tty.usbserial-A700CYY0')
 IN()
 
@@ -53,20 +61,20 @@ of = read()
 
 OH() # output hard clip limits
 oh = read()
-print(f' hard clip limits (OH): {oh} {to_mm(oh, of)} mm')
+print(f' hard clip limits (OH): {oh}')
 
 OW() # output window
 ow = read()
-print(f'           window (OW): {ow} {to_mm(ow, of)} mm')
+print(f'           window (OW): {ow}')
 
 OP() # output P1 and P2
 op = read()
-print(f'        p1 and p2 (OP): {op} {to_mm(op, of)} mm')
+print(f'        p1 and p2 (OP): {op}')
 print()
 
 OA() # output actual pen status
 oa = read()
-print(f'actual pen status (OA): {oa} {to_mm(oa[:2], of)} mm, pen {"down" if oa[2] else "up"}')
+print(f'actual pen status (OA): {oa}')
 
 OT() # output carousel type
 ot = read()
@@ -87,7 +95,10 @@ wh = ( clip[2] - clip[0], clip[3] - clip[1])
 detected_size = detect_paper(wh)
 print(f'        printable area: {round(wh[1])} × {round(wh[0])} mm')
 print(f' paper size (detected): {detected_size[0]}, {detected_size[1][0]} × {detected_size[1][1]} mm, {detected_size[2]}')
+print(f'                 media: {dm._paper_check_bit[oo[0]]}')
 print(f'         carousel type: {dm._carousel_types[ot[0]]}')
 print(f'    carousel map (1-8): {carousel_map(ot[1])}')
+print(f'                   pen: {"down" if oa[2] else "up"}, {to_mm(oa[:2], of)} mm')
+print(f'                status: {status(os)}' )
 
 close()
