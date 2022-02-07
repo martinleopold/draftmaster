@@ -26,6 +26,12 @@ Paper loading:
 | ANSI E     | 864 × 1118 mm | portrait          |
 | Arch E     | 914 × 1219 mm | portrait          |
 
+Additional formats:
+| Paper Size | Dimensions    | Loading Direction |
+| ---------- | ------------- | ----------------- |
+| 24 x 34    | 240 × 340 mm  | either            |
+| 50 x 70    | 500 × 700 mm  | landscape         |
+
 Serial cable requirements:
 * Plotter port (labeled "Computer/Modem"): Female DB-25, RS232-C/CCITT V.24 
 * Computer side (Serial to USB Adapter): Male DB-9
