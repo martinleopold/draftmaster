@@ -23,3 +23,4 @@
 21) pattern fill test, 4 circles, A3; fill_patterns.py (2022-01-31)
 22) pattern fill test, 6 circles, A3; fill_patterns.py (2022-01-31)
 23) shading test, 21 squares, 1cm^2 each, A3; shading_rest.py (2022-02-01)
+24) whale illustration by barbara, 3 prints, 24x34; wal.py (2022-02-07)
