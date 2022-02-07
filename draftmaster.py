@@ -265,23 +265,22 @@ _extended_errors = {
 }
 
 # See ESC.O, page 15-15
+# (Name of flag, 0-state, 1-state)
+# Note: Only one of bits 4 and 5 can be on at a time. If both are off the State is 'Ready'
+# Note: Bit 11 is switched when interpreted as 'Invert Plot'
 _extended_status_bits = {
-     0: ('Single sheet loaded.', 'Roll paper loaded'),
-     1: ('\'Clean\' paper loaded. (Reset after paper is sensed.)', 'Current page is not clean. Set after executing a pen down or at power-up when no paper is loaded, setting bit 5.'),
-     2: ('No paper advance (no AF, AH, FR, or PG instruction executed) since last ESC.O instruction. The ESC.O instruction resets this bis to 0.', 'Paper advance instruction (AF, AH, FR, or PG) executed since last ESC.O instruction'),
-     3: ('I/O and pen sort buffer are not empty.', 'I/O and pen sort buffers are empty and ready for data.'),
-     4: ('If bit 5 is 0 as well: Ready state. Processing HG-GL instructions. ', 'View state. Paper loaded but graphics suspended.'),
-     5: ('If bit 4 is 0 as well: Ready state. Processing HG-GL instructions.', 'Not ready. Paper not loaded, graphics suspended.'),
-     6: ('Cover is lowered.', 'Cover is open.'),
-     7: ('Emulate mode is OFF.', 'Emulate mode is ON.'),
-     8: ('Expand mode is OFF.', 'Expand mode is ON.'),
-     9: ('ESC.0, ESC.U, WD, or OK instruction has been executed. Execution of each of these instructions resers this bit to 0.', 'Function key has been pressed while plotter is in keyboard mode.'),
-    10: ('Servo is functioning', 'Servo is not functioning.'),
-    11: ('Invert Plot is ON', 'Invert Plot is OFF'),
-    12: ('Not used', 'Not used'),
-    13: ('Not used', 'Not used'),
-    14: ('Not used', 'Not used'),
-    15: ('Not used', 'Not used')
+     0: ('Using Roll paper', 'Single sheet', 'Roll paper'),
+     1: ('Paper marked', 'Clean', 'Not clean'),
+     2: ('Paper advanced', 'Paper not advanced', 'Paper advanced'),
+     3: ('I/O Buffer empty', 'Not empty', 'Empty; Ready for data'),
+     4: ('Not ready (View)', 'View', 'View off'),
+     5: ('Not ready (Paper)', 'Not Ready (Paper not loaded)', 'Paper loaded'),
+     6: ('Cover open', 'Lowered', 'Open'),
+     7: ('Emulate', 'OFF', 'ON'),
+     8: ('Expand', 'OFF', 'ON'),
+     9: ('Function key pressed', 'Not pressed', 'Pressed'),
+    10: ('Servo malfunction', 'Servo functioning', 'Servo not functioning'),
+    11: ('Invert Plot', 'ON', 'OFF'),
 }
 
 # See ESC.S, page 15-20
