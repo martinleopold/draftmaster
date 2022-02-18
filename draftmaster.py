@@ -52,6 +52,12 @@ def set_read_timeout(timeout=5):
     if _ser == None: return
     _ser.timeout = timeout
 
+def wait(ms=0):
+    _time.sleep(ms)
+
+def sleep(ms=0):
+    wait(ms)
+
 def close(delay=0, wait=True):
     '''Close the serial connection
     delay: Wait time (in seconds) before closing the connection. A minimum of 0.1 seems to be necessary for the plotter to react to previous commands (if the program doesn't wait itself).
