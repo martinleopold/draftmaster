@@ -12,7 +12,7 @@ import re
 
 SCALE = 20000 / 5906
 DECIMALS = 0
-# LIMIT_COLORS = 5 # use less colors (will wrap around) i.e. 5 reds
+LIMIT_COLORS = 6 # use less colors (will wrap around) i.e. 5 reds
 
 root, paths = svg.elements('svg/40flowers_final_eckig_nichtüberlappend.svg', ['path'])
 

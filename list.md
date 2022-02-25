@@ -25,4 +25,4 @@
 23) shading test, 21 squares, 1cm^2 each, A3; shading_rest.py (2022-02-01)
 24) whale illustration by barbara, 3 prints, 24x34; wal.py (2022-02-07)
 25) fourty tulips by barbara, outlined; 5 prints A3; 4 prints 24x34; (2022-02-18)
-26) fourty tulips by barbara, filled; 1 print w/6 shades of gray, A3; 1 print w/5 shades of red, A3; (2022-02-18)
+26) fourty tulips by barbara, filled; 2 print w/6 shades of gray, A3; 2 print w/5 shades of red, A3; (2022-02-18, 2022-02-25)
