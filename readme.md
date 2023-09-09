@@ -29,8 +29,13 @@ Paper loading:
 Additional formats:
 | Paper Size | Dimensions    | Loading Direction |
 | ---------- | ------------- | ----------------- |
-| 24 x 34    | 240 × 340 mm  | either            |
-| 50 x 70    | 500 × 700 mm  | landscape         |
+| 24 x 34    | 240 × 340 mm  | either            | * 
+| 44 x 63    | 440 × 630 mm  | landscape         | *  todo: test portrait
+| 50 x 65    | 500 × 650 mm  | landscape         | *  todo: test portrait
+| 50 x 70    | 500 × 700 mm  | landscape         | *
+| A1U        | 625 × 880 mm  | portrait          | *
+
+(* ... tested)
 
 Serial cable requirements:
 * Plotter port (labeled "Computer/Modem"): Female DB-25, RS232-C/CCITT V.24 
