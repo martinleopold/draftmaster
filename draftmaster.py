@@ -62,13 +62,12 @@ def close(delay=0, wait=True):
     '''Close the serial connection
     delay: Wait time (in seconds) before closing the connection. A minimum of 0.1 seems to be necessary for the plotter to react to previous commands (if the program doesn't wait itself).
     Update 2022-01-21: Added indefinite wait by default. Seems to be the only way to get all commands across the wire.'''
-    # if _ser == None: return
     if _ser: _ser.flush()
     if wait:
         if _debug: print('waiting for status response before closing...')
         OS()
-        s = read()
-        if _ser:
+        s = read() # can be None
+        if _ser != None and s != None:
             s_bin = f'{s:08b}'
             if _debug: print(f'status received: {s} ({s_bin[:4]} {s_bin[4:]})')
     if delay < 0: input("Press ENTER to exit...")
