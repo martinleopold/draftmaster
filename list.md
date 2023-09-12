@@ -27,3 +27,6 @@
 25) fourty tulips by barbara, outlined; 5 prints A3; 4 prints 24x34; (2022-02-18)
 26) fourty tulips by barbara, filled; 2 print w/6 shades of gray, A3; 2 print w/5 shades of red, A3; (2022-02-18, 2022-02-25)
 27) half circle filled 100mm r, full circle filled 25mm r, 5mm r circle offset 60mm to the right. A4, ink, for marie, process stamp, not numbered
+28) pony, 10 prints with various PT/FT/scales, A4, 160gsm; pony.py (2022-03-30)
+29) WB 19/20, 5+1AP, 50x65cm, 200gsm, HP Drafting Pens for AIL/VDW Supersachen Werkshop; wb19-20.py (2023-09-11)
+30) C30, 5+1AP, 50x65cm, 200gsm, HP Drafting Pens for AIL/VDW Supersachen Werkshop; c39_3.py (2023-09-12)
